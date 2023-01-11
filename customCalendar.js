@@ -1,7 +1,7 @@
 /*
 **************************
-CustomCalendar 1.0
-
+CustomCalendar 1.1.
+regDate 2023.01.11
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -37,7 +37,11 @@ function CustomCalendar(el, option){
 
     this.today = null;//오늘 날짜
     this.year = null;//설정된 날짜 기준 년도
-    this.month = null;//오늘 날짜 기준 월
+    this.month = null;//설정된 날짜 기준 월
+    this.todayYear = null;//오늘 날짜 기준 년도
+    this.todayMonth = null;//오늘 날짜 기준 월
+    this.todayDate = null;//오늘 날짜 기준 날짜
+    this.todayDay = null;//오늘 날짜 기준 요일
     this.firstDay = null;//설정된 달 첫날
     this.firstDayWeek = null;//설정된 달 첫날 요일
     this.lastDay = null;//설정된 달 마지막날
@@ -102,8 +106,16 @@ CustomCalendar.prototype.info = function(){
     console.log(this.today);//오늘 날짜
     console.log('year 설정된 날짜 기준 년도');
     console.log(this.year);//설정된 날짜 기준 년도
-    console.log('month 오늘 날짜 기준 월');
-    console.log(this.month);//오늘 날짜 기준 월
+    console.log('month 설정된 날짜 기준 월');
+    console.log(this.month);//설정된 날짜 기준 월
+    console.log('todayYear 오늘 날짜 기준 년도');
+    console.log(this.todayYear);//오늘 날짜 기준 년도
+    console.log('todayMonth 오늘 날짜 기준 월');
+    console.log(this.todayMonth);//오늘 날짜 기준 월
+    console.log('todayDate 오늘 날짜 기준 일');
+    console.log(this.todayDate);//오늘 날짜 기준 일
+    console.log('todayday 오늘 날짜 기준 요일');
+    console.log(this.todayday);//오늘 날짜 기준 요일
     console.log('firstDay 설정된 달 첫날');
     console.log(this.firstDay);//설정된 달 첫날
     console.log('firstDayWeek 설정된 달 첫날 요일');
@@ -146,8 +158,12 @@ CustomCalendar.prototype.init = function(el, option){
 }
 CustomCalendar.prototype.initDays = function(){
     this.today = new Date();//오늘 날짜
-    this.year = this.today.getFullYear();//오늘 날짜 기준 년도
-    this.month = this.today.getMonth()+1;//오늘 날짜 기준 월
+    this.year = this.today.getFullYear();//설정된 날짜 기준 년도
+    this.month = this.today.getMonth()+1;//설정된 날짜 기준 월
+    this.todayYear = this.today.getFullYear();//오늘 날짜 기준 년도
+    this.todayMonth = this.today.getMonth()+1;//오늘 날짜 기준 월
+    this.todayDate = this.today.getDate();//오늘 날짜 기준 날짜
+    this.todayDay = this.today.getDay();//오늘 날짜 기준 요일
     if(this.month < 10){this.month = "0"+this.month;}
     this.firstDay = new Date(this.year, this.month-1,1);//이번달 첫날
     this.lastDay = new Date(this.year, this.month,0);//이번달 마지막날
@@ -206,13 +222,21 @@ CustomCalendar.prototype.elementsInit = function(){
 
 CustomCalendar.prototype.drawDays = function(){
     this.dayCount = 0;
+    var dateDay = this.firstDayWeek;
     this.$calYear.text(this.year);
     this.$calMonth.text(this.month);
 
     //이번달 날짜 입력
     for(var i=this.firstDayWeek; i<this.firstDayWeek+this.lastDayDate; i++){
-        this.$calBtnDay.eq(i).text(++this.dayCount);
-        this.$calBtnDay.eq(i).attr("data-date",this.year+'-'+this.month+'-'+this.dayCount);
+        var dayCount = ++this.dayCount;
+        this.$calBtnDay.eq(i).text(dayCount);
+        
+        dayCount < 10 ? dayCount = '0' + dayCount : dayCount = dayCount;
+        this.$calBtnDay.eq(i).attr("data-date",this.year+'-'+this.month+'-'+dayCount);
+        
+        dateDay > 6 ? dateDay = 0 : dateDay = dateDay;
+        this.$calBtnDay.eq(i).attr("data-day", dateDay);
+        dateDay++;
     }
     
     //전달, 다음달 날짜칸 삭제
@@ -223,7 +247,6 @@ CustomCalendar.prototype.drawDays = function(){
         this.$calBtnDay.eq(i).addClass('disable');
     }
 
-    console.log('draw');
     this.getCalendarData();
 }
 
@@ -232,6 +255,7 @@ CustomCalendar.prototype.getNewDate = function(){
     for(var i=0;i<42;i++){
         this.$calBtnDay.eq(i).text('');
         this.$calBtnDay.eq(i).removeClass('disable');
+        this.$calBtnDay.eq(i).attr('data-date','');
     }
 
     //날짜 초기화
@@ -243,6 +267,16 @@ CustomCalendar.prototype.getNewDate = function(){
     //달력 날짜 재생성
     this.drawDays();
 }
+
+//날짜 갱신 (수동)
+CustomCalendar.prototype.setNewDate = function(date){
+    var newDate = date.split('-');
+    this.year = newDate[0];
+    this.month = newDate[1];
+
+    //달력 날짜 갱신
+    this.getNewDate();
+};
 
 //달력 데이터 셋팅 이벤트
 CustomCalendar.prototype.getCalendarData = function(){
@@ -299,7 +333,8 @@ CustomCalendar.prototype.btnNextClick = function(customEvent){
 //날짜 버튼 클릭 이벤트
 CustomCalendar.prototype.btnDayClick = function(customEvent){
     var calendar = this;
-    this.$calBtnDay.on('click', function(){
+    this.$calBtnDay.on('click', function(e){
+        e.preventDefault();
         var $el = $(this);
         customEvent(calendar, $el);
     });
