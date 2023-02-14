@@ -162,6 +162,7 @@ CustomCalendar.prototype.initDays = function(){
     this.month = this.today.getMonth()+1;//설정된 날짜 기준 월
     this.todayYear = this.today.getFullYear();//오늘 날짜 기준 년도
     this.todayMonth = this.today.getMonth()+1;//오늘 날짜 기준 월
+    if(this.todayMonth < 10){this.todayMonth = "0"+this.todayMonth;}
     this.todayDate = this.today.getDate();//오늘 날짜 기준 날짜
     this.todayDay = this.today.getDay();//오늘 날짜 기준 요일
     if(this.month < 10){this.month = "0"+this.month;}
