@@ -705,6 +705,7 @@ CustomCalendar.prototype.setDateEventData = function(title){
         value.endDate = ins.drag.endDate,
         value.dateRange = ins.drag.dateRange,
         value.dateRangeEl = ins.drag.dateRangeEl,
+        value.isSorted = false,
         ins.event.dataRows[rowKey].push(value);
     });
 }
@@ -746,16 +747,21 @@ CustomCalendar.prototype.setDateEventSort = function(){
             common = common.concat(filterArray);
         });
 
-        //이벤트 겹치는 요소 찾기
+        // === 중복 날짜가 있을 경우 ===
+        if (common.length < 1) continue;
+
+        //중복 이벤트 찾기
         var clashEvents = [];
         value.forEach(function(val, i){
             var hasClash = false;
+            val.isSorted = false; //정렬 초기화
             common.forEach(function(x){
                 val.dateRange.indexOf(x) !== -1 ? hasClash = true : '';
             });
             hasClash == true ? clashEvents.push(val) : '';
         });
 
+        //중복 이벤트 순위 정렬
         clashEvents.forEach(function(val, i){
             var rank = 0;
             clashEvents.forEach(function(v, idx){
@@ -778,31 +784,29 @@ CustomCalendar.prototype.setDateEventSort = function(){
                                 }
                             }
                         } else if (val.isClone == false && v.isClone == true) { //val 이번 주 && v 이전 주
-                            rank++;
+                            rank++; //순위 하락
                         }
                     }
                 }
             });
-            val.rank = rank;
+            val.rank = rank; //순위 적용
         });
 
-
+        
         clashEvents.forEach(function(val, i){
-            var maxRank = val.rank;
-            var nowRanks = [];
-            var overflow = [];
-            var overflowMin;
-            var overflowCount = 0;
+            var nowRanks = []; //겹치는 요소의 rank 배열
+            var sortedRanks = []; //정렬된 요소의 rank 배열
+            var overflow = []; //이전 일자 이벤트의 배열
             clashEvents.forEach(function(v, idx){
                 //동일 요소가 아닌 경우
                 if (val.id != v.id) {
                     //중복 날짜를 보유한 경우
                     if (v.startDate <= val.startDate && v.endDate >= val.startDate) {
-                        if (v.rank > maxRank) {
-                            maxRank = v.rank;
-                        }
-                        if (val.startDate > v.startDate) {
+                        if (val.startDate > v.startDate) { //이전 일자 이벤트
                             overflow.push(v.rank);
+                        }
+                        if (v.isSorted == true) { //이미 정렬된 요소
+                            sortedRanks.push(v.rank);
                         }
                         nowRanks.push(v.rank);
                     }
@@ -810,80 +814,48 @@ CustomCalendar.prototype.setDateEventSort = function(){
                     nowRanks.push(v.rank);
                 }
             });
-            overflowCount = overflow.length;
-            overflowMin = Math.min.apply(null, overflow);
-
-            // var counts = {};
-            // nowRanks.forEach(function(v, idx){
-            //     var item = nowRanks[idx];
-            //     counts[item] = (counts[item] || 0)+1;
-            //     if (counts[item] > 1) {
-            //         boundaryCount++;
-            //         if (boundary == undefined || item < boundary) {
-            //             boundary = item;
-            //         }
-            //     }
-            // });
-            
             var isClashed = false;
-            var count = maxRank;
+            var count = nowRanks.length-1;
+            var overflowCount = overflow.length; //이전 일자 갯수
+            // var overflowMin = overflowCount != 0 ? Math.min.apply(null, overflow) : 0; //이전 일자 최소 값
             var limit = nowRanks.length-1;
-            console.log('------');
-            console.log('rank', val.rank);
-            console.log('title', val.title);
-            console.log('maxRank', maxRank);
-            console.log('nowRanks', nowRanks);
-            console.log('overflow', overflow);
-            console.log('overflowCount', overflowCount);
-            console.log('overflowMin', overflowMin);
-            console.log('limit', limit);
-
             while (count >= 0 && isClashed == false) {
                 if (nowRanks.indexOf(count) == -1) {
-                    // console.log('카운트됨')
                     isClashed = true;
                 }
                 count--;
             }
+            
 
+            //rank 중복시 rank가 비어있는 공백 현상 여부
             if (isClashed) {
-                //rank가 중복되거나 등록된 이벤트보다 최고 rank가 더 클 경우
+                // console.log('------');
+                // console.log('rank', val.rank);
+                // console.log('title', val.title);
+                // console.log('nowRanks', nowRanks);
+                // console.log('overflow', overflow);
+                // console.log('overflowCount', overflowCount);
+                // console.log('limit', limit);
                 clashEvents.forEach(function(v, idx){
+                    //동일 요소가 아니고 정렬되지 않은 경우
                     if (val.id != v.id && isClashed) {
                         //중복 날짜를 보유한 경우
                         if ((v.startDate <= val.startDate && v.endDate >= val.startDate) || (v.startDate <= val.endDate && v.endDate >= val.endDate)) {
                             var flag = true;
                             val.rank = val.rank - overflowCount;
-                            for (var index = val.rank; index <= limit; index++) {
-                                if (overflow.indexOf(index) == -1 && flag == true) {
+                            for (var index = val.rank; index <= limit; index++) { //등록된 이벤트 의 갯수
+                                //이전 날짜와 겹치지 않고 이미 정렬되지 않았고,
+                                if (overflow.indexOf(index) == -1 && sortedRanks.indexOf(index) == -1 && flag == true) {
                                     val.rank = index;
                                     flag = false;
                                 }
                             }
                             isClashed = false;
-
-                            // if (maxRank <= limit) {
-                            //     console.log('title1', val.title);
-                            //     val.rank = val.rank - overflowCount;
-                            //     if (val.rank >= overflowMin) {
-                            //         val.rank = val.rank + overflowCount;
-                            //     }
-                            //     isClashed = false;
-                            // } else if (maxRank > limit) {
-                            //     console.log('title2', val.title);
-                            //     if (val.rank <= maxRank) {
-                            //         val.rank--;
-                            //         while (nowRanks.indexOf(val.rank) == -1 && val.rank > 0) {
-                            //             val.rank--;
-                            //         }
-                            //     }
-                            //     isClashed = false;
-                            // }
+                            val.isSorted = true;
                         }
                     }
                 });
             }
-            console.log('rank', val.rank);
         });
     }
 };
