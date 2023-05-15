@@ -89,6 +89,7 @@ function CustomCalendar(el, option){
     this.event.name;
     this.event.data = [];
     this.event.dataRows = {};
+    this.event.category;
     this.event.pin = {};
     this.event.pin.size;
     this.event.pin.maxNum;
@@ -96,9 +97,25 @@ function CustomCalendar(el, option){
     this.event.pin.container;
     this.event.pin.$container;
     this.event.pin.pin;
+    this.event.pin.typeMore;
+    this.event.pin.more;
     this.event.pin.content;
     this.event.pin.space;
     this.event.pin.extension;
+    this.event.pin.category;
+    this.event.pop = {};
+    this.event.pop.container;
+    this.event.pop.head;
+    this.event.pop.body;
+    this.event.pop.btnClose;
+    this.event.pop.list = {};
+    this.event.pop.list.container;
+    this.event.pop.list.content;
+    this.event.pop.list.item;
+    this.event.pop.detail = {};
+    this.event.pop.detail.content;
+    this.event.pop.detail.head;
+    this.event.pop.detail.body;
 
     this.options = {};
     this.options.tableSummary;      //테이블 요약내용
@@ -125,7 +142,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.cal.title = 'cal-title';
         this.cal.year = 'cal-year';
         this.cal.month = 'cal-month';
-        this.cal.btnMonths = 'btn-nav';
+        this.cal.btnMonths = 'btn-cal';
         this.cal.btnMonthPrev = 'prev';
         this.cal.btnMonthNext = 'next';
         this.cal.body = 'cal-body';
@@ -142,17 +159,29 @@ CustomCalendar.prototype.init = function(el, option){
         this.data.event.rank = 'data-event-rank';
 
         this.event.name = 'ce_';
+        this.event.category = false;
         this.event.pin.size = 20;
         this.event.pin.maxNum = 4;
         this.event.pin.pin = 'cal-pin';
+        this.event.pin.extension = 'cal-extension';
+        this.event.pin.typeMore = 'type-more';
+        this.event.pin.more = 'cal-pin-more';
         this.event.pin.content = 'cal-pin-con';
-        this.event.pin.category = 'cal-pin-cateorgy';
+        this.event.pin.category = 'cal-cateorgy';
+        this.event.pop.container = 'cal-pop';
+        this.event.pop.body = 'cal-pop-body';
+        this.event.pop.btnClose = 'cal-pop-close';
+        this.event.pop.list.content = 'cal-pop-list';
+        this.event.pop.list.item = 'cal-pop-list-item';
+        this.event.pop.list.pin = 'cal-pop-list-pin';
+        this.event.pop.detail.content = 'cal-pop-detail';
 
         this.options.tableSummary = '';
         this.options.dayNames = ['일','월','화','수','목','금','토'];
         this.options.showsOtherMonth = false;
-        this.options.useDragRange = false;
         this.options.useDateEvent = false;
+        this.options.useDragRange = false;
+        this.options.useEventPop = true;
     } else {
         option.cal = option.cal == undefined ? this.cal : option.cal;
         this.cal.header = option.cal.header == undefined ? 'cal-header' : option.cal.header;
@@ -183,22 +212,42 @@ CustomCalendar.prototype.init = function(el, option){
 
         option.event = option.event == undefined ? this.event : option.event;
         this.event.name = option.event.name == undefined ? 'ce_' : option.event.name;
+        this.event.category = option.event.category == undefined ? false : option.event.category;
+
         option.event.pin = option.event.pin == undefined ? this.event.pin : option.event.pin;
         this.event.pin.size = option.event.pin.size == undefined ? 20 : option.event.pin.size;
         this.event.pin.maxNum = option.event.pin.maxNum == undefined ? 4 : option.event.pin.maxNum;
         this.event.pin.container = option.event.pin.container == undefined ? 'cal-event-container' : option.event.pin.container;
         this.event.pin.pin = option.event.pin.pin == undefined ? 'cal-pin' : option.event.pin.pin;
+        this.event.pin.extension = option.event.pin.extension == undefined ? 'cal-extension' : option.event.pin.extension;
+        this.event.pin.typeMore = option.event.pin.typeMore == undefined ? 'type-more' : option.event.pin.typeMore;
+        this.event.pin.more = option.event.pin.more == undefined ? 'cal-pin-more' : option.event.pin.more;
         this.event.pin.content = option.event.pin.content == undefined ? 'cal-pin-con' : option.event.pin.content;
         this.event.pin.space = option.event.pin.space == undefined ? 'cal-space' : option.event.pin.space;
-        this.event.pin.extension = option.event.pin.extension == undefined ? 'cal-extension' : option.event.pin.extension;
+        this.event.pin.category = option.event.pin.category == undefined ? 'cal-cateorgy' : option.event.pin.category;
+
+        option.event.pop = option.event.pop == undefined ? this.event.pop : option.event.pop;
+        this.event.pop.container = option.event.pop.container == undefined ? 'cal-pop' : option.event.pop.container;
+        this.event.pop.head = option.event.pop.head == undefined ? 'cal-pop-head' : option.event.pop.head;
+        this.event.pop.body = option.event.pop.body == undefined ? 'cal-pop-body' : option.event.pop.body;
+        this.event.pop.btnClose = option.event.pop.btnClose == undefined ? 'cal-pop-close' : option.event.pop.btnClose;
+
+        option.event.pop.list = option.event.pop.list == undefined ? this.event.pop.list : option.event.pop.list;
+        this.event.pop.list.content = option.event.pop.list.content == undefined ? 'cal-pop-list' : option.event.pop.list.content;
+        this.event.pop.list.item = option.event.pop.list.item == undefined ? 'cal-pop-list-item' : option.event.pop.list.item;
+        this.event.pop.list.pin = option.event.pop.list.pin == undefined ? 'cal-pop-list-pin' : option.event.pop.list.pin;
+        
+        option.event.pop.detail = option.event.pop.detail == undefined ? this.event.pop.detail : option.event.pop.detail;
+        option.event.pop.detail.content = option.event.pop.detail.content == undefined ? 'cal-pop-detail' : option.event.pop.detail.content;
 
 
         option.options = option.options == undefined ? this.options : option.options;
         this.options.tableSummary = option.options.tableSummary == undefined ? '' : option.options.tableSummary;
         this.options.dayNames = option.options.dayNames == undefined ? ['일','월','화','수','목','금','토'] : option.options.dayNames;
         this.options.showsOtherMonth = option.options.showsOtherMonth == undefined ? false : option.options.showsOtherMonth;
-        this.options.useDragRange = option.options.useDragRange == undefined ? false : option.options.useDragRange;
         this.options.useDateEvent = option.options.useDateEvent == undefined ? false : option.options.useDateEvent;
+        this.options.useDragRange = option.options.useDragRange == undefined ? false : option.options.useDragRange;
+        this.options.useEventPop = option.options.useEventPop == undefined ? true : option.options.useEventPop;
     }
 
     this.initDate(); //날짜 데이터 설정
@@ -207,7 +256,7 @@ CustomCalendar.prototype.init = function(el, option){
     this.renderDate(); //날짜 데이터 입력
     this.onChangeMonth();//캘린더 전환 이벤트 설정
 
-    this.options.useDragRange === true ? this.onDragRange() : ''; //드래그 이벤트 사용여부
+    this.setDateEventInit();
     // this.options.useDateEvent === true ? this.onDragRange() : ''; //드래그 이벤트 사용여부
 }
 
@@ -299,6 +348,7 @@ CustomCalendar.prototype.renderLayout = function(){
     layout += '</div>';
 
     //레이아웃 생성
+    this.options.useDateEvent === true ? this.cal.$calendar.addClass('type-event') : ''; //이벤트 사용여부
     this.cal.$calendar.html(layout);
 }
 
@@ -550,6 +600,146 @@ CustomCalendar.prototype.resetSelected = function(){
 
 
 //날짜 드래그 선택 이벤트
+CustomCalendar.prototype.setDateEventInit = function(){
+    var ins = this;
+    if (this.options.useDateEvent) {
+        //날짜 드래그 이벤트
+        ins.onDragRange();
+    } else {
+        //날짜 하나만 클릭하는 이벤트 (예정)
+
+    }
+
+    if (this.options.useEventPop) {
+        ins.onClickPin();
+    }
+}
+
+CustomCalendar.prototype.onClickPin = function(){
+    var ins = this;
+    this.cal.$body.on('mousedown touchstart', '.'+ins.event.pin.pin, function(e){
+        e.preventDefault();
+        var $el = $(this);
+        var $td = $el.closest('td');
+        var option = {};
+        if ($el.hasClass(ins.event.pin.typeMore)) {
+            //더보기 버튼
+            option.type = 'more';
+            option.data = [];
+            var nowDate = $td.attr(ins.data.cellDate);
+            ins.event.data.forEach(function(val, idx){
+                if (val.dateRange.indexOf(nowDate) != -1) {
+                    option.data.push(val);
+                }
+            });
+        } else {
+            //일정 버튼
+            option.type = 'detail';
+            var eventId = $el.attr(ins.data.event.id);
+            ins.event.data.forEach(function(val, i){
+                if (val.id == eventId) {
+                    option.data = val;
+                    return false;
+                }
+            });
+        }
+        
+        ins.renderPop(e, $td, option);
+    });
+
+    this.cal.$body.on('mousedown touchstart', '.'+ins.event.pop.btnClose, function(e){
+        this.closest('.'+ins.event.pop.container).remove();
+    });
+}
+
+CustomCalendar.prototype.renderPop = function(event, td, option){
+    console.log(event);
+    console.log(td);
+    var ins = this;
+    var popup = this.cal.$calendar.find('.'+ins.event.pop.container);
+    popup.length > 0 ? popup.remove() : '';
+
+    var isFound = false;
+    var nowLocation = nowLocation = event.type == 'touchmove' ? event.touches[0] : event;
+    var targetTd = document.elementsFromPoint(nowLocation.clientX, nowLocation.clientY);
+    for (var i = 0; i < targetTd.length; i++) {
+        if (targetTd[i].tagName === 'TD') {
+            targetTd = targetTd[i];
+            isFound = true;
+            break;
+        }
+    }
+    
+    var date = option.type == 'detail' ? option.data.startDate : targetTd.getAttribute(ins.data.cellDate);
+    var top = targetTd.offsetTop;
+    var left = targetTd.offsetLeft;
+    var html = '<div class="'+ ins.event.pop.container +'" style="top: ' + top + 'px;' + 'left: ' + left + 'px;' + '">';
+    html += '<div class="'+ ins.event.pop.head +'">';
+    html += '<strong class="tit">'+ date +'</strong>';
+    html += '<button class="'+ ins.event.pop.btnClose +'"><span>닫기</span></button>';
+    html += '</div>';
+    html += '<div class="'+ ins.event.pop.body +'">';
+    html += option.type == 'detail' ? ins.setPopDetailHtml(option) : ins.setPopMoreHtml(option);
+    html += '</div></div>';
+
+    td.append(html);
+}
+CustomCalendar.prototype.setPopDetailHtml = function(option){
+    var ins = this;
+    var html = '';
+    html += '<div class="'+ ins.event.pop.detail.content +'">';
+    html += '<ul class="detail-list">';
+    if (option.data.category != undefined) {
+        html += '<li class="detail-item">';
+        html += '<strong class="item-tit">카테고리</strong>';
+        html += '<div class="item-con">';
+        html += '<div class="e-category">';
+        option.data.category.forEach(function(val,i){
+            html += '<span>'+ val +'</span>';
+        });
+        html += '</div>';
+        html += '</div>';
+        html += '</li>';
+    }
+    html += '<li class="detail-item">';
+    html += '<strong class="item-tit">제목</strong>';
+    html += '<div class="item-con">'+ option.data.title +'</div>';
+    html += '</li>';
+    if (option.data.content != undefined) {
+        html += '<li class="detail-item">';
+        html += '<strong class="item-tit"></strong>';
+        html += '<div class="item-con">'+ option.data.title +'</div>';
+        html += '</li>';
+    }
+    html += '<li class="detail-item">';
+    html += '<strong class="item-tit">시작일</strong>';
+    html += '<div class="item-con">'+ option.data.startDate +'</div>';
+    html += '</li>';
+    html += '<li class="detail-item">';
+    html += '<strong class="item-tit">종료일</strong>';
+    html += '<div class="item-con">'+ option.data.endDate +'</div>';
+    html += '</li>';
+    html += '</ul>';
+    html += '</div>';
+    return html;
+}
+CustomCalendar.prototype.setPopMoreHtml = function(option){
+    var ins = this;
+    var html = '';
+    html += '<ul class="'+ ins.event.pop.list.content +'">';
+    option.data.forEach(function(val, i){
+        html += '<li class="'+ ins.event.pop.list.item +'">';
+        html += '<button type="button" class="'+ ins.event.pop.list.pin +'" ';
+        html += ins.data.event.id + '="' + val.id + '"';
+        html += ins.data.event.startDate +'="'+ val.startDate +'" >';
+        html += val.title;
+        html += '</button>';
+        html += '</li>';
+    });
+    html += '</ul>';
+    return html;
+}
+
 CustomCalendar.prototype.onDragRange = function(){
     var ins = this;
     ins.drag.isPress = false; //현재 마우스 상태
@@ -636,28 +826,26 @@ CustomCalendar.prototype.onDragRange = function(){
             ins.drag.startDate = ins.drag.dateRange[0];
             ins.drag.endDate = ins.drag.dateRange[ins.drag.dateRange.length - 1];
 
-            if (typeof ins.onCustomDragEnd == 'function') { //커스텀 콜백함수
-                ins.onCustomDragEnd();
-            } else { //기본
-                ins.onDragEnd();
-            }
+            ins.onDragEnd();
             e.type == 'mouseup' ? ins.cal.$td.off('mouseup') : ins.cal.$td.off('touchend');
         });
     });
-
-    ins.onClickPin();
 }
 
 //드래그 종료 콜백
 CustomCalendar.prototype.onDragEnd = function(){
     var ins = this;
     this.resetSelected();
-    if (this.options.useDateEvent) {
-        if (typeof this.renderCustomDateEvent == 'function') {
-            this.renderCustomDateEvent();
-        } else {
-            this.renderDateEvent();
-        }
+    if (typeof ins.onCustomDragEnd == 'function') { //커스텀 콜백함수
+        ins.onCustomDragEnd();
+    }
+    var dateEvent = typeof this.renderCustomDateEvent == 'function' ? this.renderCustomDateEvent : this.renderDateEvent;
+    var returnData = dateEvent();
+    
+    if (returnData != false) {
+        ins.setDateEventData(returnData);
+        ins.setDateEventSort();
+        ins.renderDateEventPin();
     }
 }
 CustomCalendar.prototype.onCustomDragEnd;
@@ -667,10 +855,7 @@ CustomCalendar.prototype.renderDateEvent = function(){
     var ins = this;
     var title = prompt('타이틀을 입력해주세요.');
     if (title == null) return false;
-    
-    ins.setDateEventData(title);
-    ins.setDateEventSort();
-    ins.renderDateEventPin();
+    return title;
 }
 CustomCalendar.prototype.renderCustomDateEvent;
 
@@ -701,14 +886,17 @@ CustomCalendar.prototype.setDateEventData = function(title){
         });
     });
 
+    //이벤트 데이터 등록
     this.event.data.push({
         'id' : eventId,
+        'title' : title,
         'startDate' : this.drag.startDate,
         'endDate' : this.drag.endDate,
         'dateRange' : this.drag.dateRange,
         'totalRange': this.drag.dateRange.length,
     });
     
+    //row별로 데이터 등록
     tds.forEach(function(value){
         var rowKey = 'row_' + value.row;
         if (ins.event.dataRows[rowKey] == undefined) {
@@ -757,9 +945,9 @@ CustomCalendar.prototype.setDateEventSort = function(){
             if (i == 0) return;
             var filterArray = val.dateRange.filter(function(x) {
                 if (value[i-1].dateRange.indexOf(x) !== -1 && common.indexOf(x) == -1) {
-                    return true;
+                    return 1;
                 }
-                return false;
+                return -1;
             });
             common = common.concat(filterArray);
         });
@@ -887,46 +1075,52 @@ CustomCalendar.prototype.renderDateEventPin = function(){
     
     for (var key in ins.event.dataRows) {
         var value = ins.event.dataRows[key];
-        value.forEach(function(val, index){
+        value.forEach(function(val, i){
             var $td = val.el;
             var $container = $td.find('.'+ins.event.pin.container);
-            var html = '';
+            if (val.rank >= ins.event.pin.maxNum && $container.find('.'+ins.event.pin.typeMore).length > 0) return false;
+
             var top = (val.rank * ins.event.pin.size) + 'px';
             var width = parseInt(val.range) * 100;
             var border = parseInt(val.range) - 1;
             var size = 'calc('+ width + '% + ' + border +'px)';
             var pinClass = val.isClone == true ? ins.event.pin.pin + ' ' + ins.event.pin.extension : ins.event.pin.pin;
             if (val.rank < ins.event.pin.maxNum) {
-                html += '<div class="'+ pinClass +'" ';
+                var html = '';
+                var content = '';
+                content += '<div class="'+ ins.event.pin.content +'" >';
+                content += val.title;
+                content += '</div>';
+
+                html += '<button class="'+ pinClass +'" ';
                 html += 'style="top: '+ top +'; width: '+ size +';"';
                 html += ins.data.event.id +'="'+ val.id +'" ';
                 html += ins.data.event.range +'="'+ val.range +'" ';
-                html += 'data-clone="'+ val.isClone +'" >';
+                html += 'data-clone="'+ val.isClone +'" ';
                 // html += ins.data.event.title +'="'+ val.title +'" ';
-                // html += ins.data.event.startDate +'="'+ val.startDate +'" ';
+                html += ins.data.event.startDate +'="'+ val.startDate +'" >';
                 // html += ins.data.event.endDate +'="'+ val.endDate +'">';
-                html += '<div class="'+ ins.event.pin.content +'" >';
-                html += val.title;
-                html += '</div></div>';
+                html += content;
+                html += '</button>';
+                
+                $container.append(html);
             } else {
-                if ($container.find('.more').length < 1){
-                    html += '<div class="'+ pinClass +'" ';
-                    html += 'style="top: '+ top +'; width: '+ size +';">';
-                    html += '<div class="more" >';
-                    html += '더보기';
-                    html += '</div></div>';
-                }
+                val.dateRangeEl.forEach(function(el){
+                    var $td = $(el);
+                    var $container = $td.find('.'+ins.event.pin.container);
+                    var html = '';
+                    var content = '<div class="'+ ins.event.pin.more +'">더보기</div>';
+                    pinClass += ' ' + ins.event.pin.typeMore;
+                    html += '<button class="'+ pinClass +'" ';
+                    html += 'style="top: '+ top +';" >';
+                    // html += ins.data.event.title +'="'+ val.title +'" ';
+                    // html += ins.data.event.endDate +'="'+ val.endDate +'">';
+                    html += content;
+                    html += '</button>';
+
+                    $container.append(html);
+                });
             }
-            
-            $container.append(html);
         });
     }
 };
-
-CustomCalendar.prototype.onClickPin = function(){
-    var ins = this;
-    this.cal.$body.on('mousedown touchstart', '.'+ins.event.pin.content, function(e){
-        e.preventDefault();
-        console.log('asdasdsd');
-    });
-}

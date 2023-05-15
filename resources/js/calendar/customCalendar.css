@@ -3,7 +3,7 @@
 	분류그룹 : 캘린더
 	속성순서 : 레이아웃, 박스 모델, 배경, 폰트/정렬, 기타
 -------------------------------------------------------------------*/
-.calendar-wrap {border:1px solid #e9e9e9; border-bottom: 0;}
+.calendar-wrap {display: block; position: relative; border:1px solid #e9e9e9; border-bottom: 0;}
 .calendar-wrap * {margin:0px; padding:0px; font-family: inherit; box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box; -webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;-ms-text-size-adjust:100%;}
 
 
@@ -48,22 +48,25 @@
 	속성순서 : 레이아웃, 박스 모델, 배경, 폰트/정렬, 기타
 -------------------------------------------------------------------*/
 .calendar-wrap .cal-body {display: block;}
-.calendar-wrap .cal-body .calendar {width:100%; table-layout:fixed; border-spacing:0px; border-collapse:collapse; text-align:center;}
+.calendar-wrap .cal-body .calendar {position: relative; width:100%; table-layout:fixed; border-spacing:0px; border-collapse:collapse; text-align:center;}
 .calendar-wrap .cal-body .calendar th {width:14.2%; height:60px; padding:12px 0; border-width:1px 1px 1px 0; border-style: solid; border-color:#e9e9e9; font-size:16px; color:#000; background-color:#fafafa;}
 .calendar-wrap .cal-body .calendar tr th:first-child {color:red;}
 .calendar-wrap .cal-body .calendar tr th:last-child {border-width:1px 0px 1px 1px; color:blue;}
 
-/* .calendar-wrap .cal-body .calendar td {height:60px; padding:10px; border-width:0px 1px 1px 0; border-style: solid;border-color:#e9e9e9;} */
-.calendar-wrap .cal-body .calendar td {height:60px; border-width:0px 1px 1px 0; border-style: solid;border-color:#e9e9e9;}
+.calendar-wrap .cal-body .calendar td {height:60px; padding:10px; border-width:0px 1px 1px 0; border-style: solid; border-color:#e9e9e9;}
 .calendar-wrap .cal-body .calendar tr td:first-child {color:red;}
 .calendar-wrap .cal-body .calendar tr td:last-child {border-width:1px 0px 1px 0px; color:blue;}
-.calendar-wrap .cal-body .calendar tr td .btn-day {display: block; height:35px; border-radius: 50%; line-height: 35px; font-weight:600; font-size:13px; text-align: center; color: inherit; text-decoration:none; background-color: transparent;}
-.calendar-wrap .cal-body .calendar tr td .cal-event-container {display: block; position: relative;}
-.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin {display: block; overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; height: 20px; padding: 1px 0;}
-.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con {display: block; height: 100%; padding: 0 10px; border-radius: 4px; background-color: #0b75cc; line-height: 18px; font-size: 14px; color: #ffffff; text-align: left; white-space: nowrap; text-overflow: ellipsis;}
-.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin.cal-extension::before {content:""; position: absolute; top: 1px; left: 0; width: 10px; height: 18px; border-width: 9px 9px 9px 0; border-style: solid; border-color: #ffffff; border-right-color: #0b75cc; box-sizing: border-box;}
-.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin.cal-extension .cal-pin-con {border-radius: 0 4px 4px 0;}
+.calendar-wrap .cal-body .calendar tr td .btn-day {display: block; width: 35px; height:35px; margin: 0 auto; border-radius: 50%; line-height: 35px; font-weight:600; font-size:14px; text-align: center; color: inherit; text-decoration:none; background-color: transparent;}
 
+.calendar-wrap.type-event .cal-body .calendar td {padding: 0;}
+.calendar-wrap.type-event .cal-body .calendar tr td .btn-day {width: auto; padding: 0 10px; border-radius: 0; text-align: right;}
+.calendar-wrap.type-event .cal-body .calendar td {padding: 0;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container {display: block; position: relative;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin {display: block; overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; width: 100%; height: 20px; padding: 1px 0;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin.cal-extension::before {content:""; position: absolute; top: 1px; left: 0; width: 10px; height: 18px; border-width: 9px 9px 9px 0; border-style: solid; border-color: #ffffff; border-right-color: #0b75cc; box-sizing: border-box;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con {display: block; overflow: hidden; height: 100%; padding: 0 10px; border-radius: 4px; background-color: #0b75cc; line-height: 18px; font-size: 14px; color: #ffffff; text-align: left; white-space: nowrap; text-overflow: ellipsis;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin.cal-extension .cal-pin-con {border-radius: 0 4px 4px 0;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-more {display: block; width: 100%; height: 100%; padding: 0 10px; border-radius: 4px; background-color: #585858; line-height: 18px; font-size: 14px; color: #ffffff;}
 /*-------------------------------------------------------------------
 	@interaction
 -------------------------------------------------------------------*/
@@ -90,6 +93,42 @@
 @media screen and (max-width: 425px) {
     .calendar-wrap .cal-body .calendar tr td .btn-day {width: 20px; height: 20px; line-height: 20px;}
 }
+
+
+
+
+/*-------------------------------------------------------------------
+	분류그룹 : 캘린더 > 바디 (달력)
+	속성순서 : 레이아웃, 박스 모델, 배경, 폰트/정렬, 기타
+-------------------------------------------------------------------*/
+.cal-pop {display:block; overflow: hidden; position: absolute; top: 50px; left: 50px; z-index: 999; max-width: 300px; width: 100%; border-radius: 4px; box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.2);}
+.cal-pop .cal-pop-head {display: block; position: relative; padding: 0 50px 0 15px; background-color: #585858; text-align: left;}
+.cal-pop .cal-pop-head .tit {display: block; overflow: hidden; font-weight: 600; font-size: 1rem; line-height: 40px; color: #ffffff; white-space: nowrap; text-overflow: ellipsis;}
+.cal-pop .cal-pop-close {position: absolute; top: 10px; right: 15px; width: 20px; height: 20px; background-color: transparent;}
+.cal-pop .cal-pop-close > span {position: absolute; overflow: hidden; width: 1px; height: 1px; margin: -1px; clip: rect(0 0 0 0);}
+.cal-pop .cal-pop-close::before {content:""; position: absolute; top: calc(50% - 1px); left: 0; width: 100%; height: 2px; border-radius: 2px; background-color: #ffffff; transform: rotate(45deg);}
+.cal-pop .cal-pop-close::after {content:""; position: absolute; top: calc(50% - 1px); left: 0; width: 100%; height: 2px; border-radius: 2px; background-color: #ffffff; transform: rotate(-45deg);}
+
+.cal-pop .cal-pop-body {display: block; overflow-x: hidden; overflow-y: auto; max-height: 300px;}
+.cal-pop .cal-pop-body .cal-pop-detail {display: block; padding: 15px; background-color: #ffffff; text-align: left;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list {display: block;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item {display: flex; margin-bottom: 8px; font-size: 1rem; color: #333333; align-items: center;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item:last-child {margin-bottom: 0;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-tit {display: block; min-width: 25%; padding-right: 10px; line-height: 20px; font-weight: 600; flex-shrink: 0;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con {display: block; line-height: 20px; word-break: break-all; flex-grow: 1;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-category {display: flex; flex-wrap: wrap;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-category > span {display: block; border-radius: 4px; padding: 0 5px; background-color: #af72f5; line-height: 20px; color: #ffffff; word-break: break-all;}
+
+.cal-pop .cal-pop-body .cal-pop-list {display: block; padding: 10px; background-color: #ffffff;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item {display: block; margin-bottom: 6px;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item:last-child {margin-bottom: 0;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-list-pin {display: block; overflow: hidden; width: 100%; height: 24px; padding: 0 10px; border-radius: 4px; background-color: #0b75cc; line-height: 24px; font-size: 1rem; color: #ffffff; text-align: left; white-space: nowrap; text-overflow: ellipsis;}
+/*-------------------------------------------------------------------
+	@interaction
+-------------------------------------------------------------------*/
+.cal-pop .cal-pop-body::-webkit-scrollbar {width: 8px; height: 5px; box-sizing: content-box;}
+.cal-pop .cal-pop-body::-webkit-scrollbar-thumb {height: 30%; border-radius: 4px; background: #828282;}
+.cal-pop .cal-pop-body::-webkit-scrollbar-track {padding: 0 5px; background: #e4e4e4;}
 
 
 

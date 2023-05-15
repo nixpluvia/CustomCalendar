@@ -113,7 +113,7 @@ body.action{overflow:hidden;height: 100%;}
 /* //code highlight box */
 
 /* footer */
-#footer {display: block; position: fixed; bottom: 0; left: 0; width: 100%; padding: 0 20px; height: 50px; background-color: #3c3c3c;}
+#footer {display: block; position: fixed; bottom: 0; left: 0; z-index: 99; width: 100%; padding: 0 20px; height: 50px; background-color: #3c3c3c;}
 #footer::after {content:''; display: block; clear: both;}
 #footer .info {display: block; float: left; line-height: 50px; font-size: 14px; text-align: left; color: #ddd;}
 #footer .copyright {display: block; float: right; line-height: 50px; font-size: 14px; text-align: right; color: #ddd;}
