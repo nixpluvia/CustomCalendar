@@ -24,7 +24,6 @@
 	<!-- //libraries -->
 
 	<script src="./resources/js/menu.js" type="text/javascript"></script>
-	<script src="./resources/js/custom.js" type="text/javascript"></script>
 	<!-- //기본 세팅 -->
 
 </head>
@@ -52,7 +51,9 @@
             <h1 class="tit">Custom Calendar</h1>
             <nav class="gnb">
                 <ul class="list-wrap">
+                    <li><a href="./install.html" class="btn type-b"><span class="txt">install</span></a></li>
                     <li><a href="./default.html" class="btn type-b"><span class="txt">Default</span></a></li>
+                    <li><a href="./event.html" class="btn type-b"><span class="txt">Event</span></a></li>
                 </ul>
             </nav>
         </header>
@@ -65,34 +66,37 @@
                 <nav class="snb">
                     <ul class="menu-01">
                         <li>
+                            <strong class="tit">Install</strong>
+                            <ul class="menu-02">
+                                <li><a href="./install.html">Install</a></li>
+                                <li><a href="./api.html">API</a></li>
+                            </ul>
+                        </li>
+                        <li>
                             <strong class="tit">Default</strong>
                             <ul class="menu-02">
                                 <li><a href="./default.html">Default</a></li>
+                                <li><a href="./custom.html">Custom Data</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong class="tit">Event</strong>
+                            <ul class="menu-02">
+                                <li><a href="./event.html">Default</a></li>
                             </ul>
                         </li>
                     </ul>
                 </nav>
             </aside>
             <div id="content">
-                <h2 class="h2">Grid</h2>
+                <h2 class="h2">Install</h2>
                 <section id="sc0101" class="section">
-                    <h3 class="h3">Default</h3>
-    
+                    <h3 class="h3">설치 방법</h3>
                     <div class="section-part">
-
-                        <div class="testbox">
-                            <ul class="list-wrap">
-                                <li id="li1"></li>
-                                <li id="li2"></li>
-                                <li id="li3"></li>
-                                <li id="li4"></li>
-                                <li id="li5"></li>
-                            </ul>
-                        </div>
+                        <p class="txt">/js/calendar 폴더에 있는 JS, CSS 삽입 후 Head에 작성하면 됩니다.</p>
                     </div>
     
                 </section>
-
             </div>
         </main>
     
@@ -100,7 +104,7 @@
         
         <footer id="footer">
             <p class="info">이 사이트는 Screen Size - 600px까지 지원하고 있습니다.</p>
-            <p class="copyright">Copyrightⓒ2022 Whisker All rights reserved.</p>
+            
         </footer>
     
     </div>

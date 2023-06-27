@@ -51,7 +51,9 @@
             <h1 class="tit">Custom Calendar</h1>
             <nav class="gnb">
                 <ul class="list-wrap">
+                    <li><a href="./install.html" class="btn type-b"><span class="txt">install</span></a></li>
                     <li><a href="./default.html" class="btn type-b"><span class="txt">Default</span></a></li>
+                    <li><a href="./event.html" class="btn type-b"><span class="txt">Event</span></a></li>
                 </ul>
             </nav>
         </header>
@@ -64,176 +66,47 @@
                 <nav class="snb">
                     <ul class="menu-01">
                         <li>
+                            <strong class="tit">Install</strong>
+                            <ul class="menu-02">
+                                <li><a href="./install.html">Install</a></li>
+                                <li><a href="./api.html">API</a></li>
+                            </ul>
+                        </li>
+                        <li>
                             <strong class="tit">Default</strong>
                             <ul class="menu-02">
                                 <li><a href="./default.html">Default</a></li>
+                                <li><a href="./custom.html">Custom Data</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong class="tit">Event</strong>
+                            <ul class="menu-02">
+                                <li><a href="./event.html">Default</a></li>
                             </ul>
                         </li>
                     </ul>
                 </nav>
             </aside>
             <div id="content">
-                <h2 class="h2">Grid</h2>
+                <h2 class="h2">Default</h2>
                 <section id="sc0101" class="section">
                     <h3 class="h3">Default</h3>
-    
                     <div class="section-part">
-
                         <div class="custom-calendar">
                             <div id="calendar" class="calendar-wrap"></div>
-                            <div class="cal-caption">
-                                <ul class="list">
-                                    <li class="li01">선택</li>
-                                    <li class="li02">예약이 있는 날</li>
-                                    <li class="li03">예약가능</li>
-                                    <li class="li04">예약불가</li>
-                                </ul>
-                            </div>
                         </div>
                         
-
                         <script>
                             var calendar = new CustomCalendar('#calendar');
-                    
-                            //받아올 json 데이터 예시
-                            var jsonData = {
-                                "2023":{
-                                    "02":{
-                                        "12":{
-                                            "isRsrv": "N",
-                                            "data" : []
-                                        },
-                                        "13":{
-                                            "isRsrv": "N",
-                                            "data" : []
-                                        },
-                                        "14":{
-                                            "isRsrv": "N",
-                                            "data" : []
-                                        },
-                                        "15":{
-                                            "isRsrv": "Y",
-                                            "data" : []
-                                        },
-                                        "16":{
-                                            "isRsrv": "Y",
-                                            "data" : []
-                                        },
-                                        "17":{
-                                            "isRsrv": "Y",
-                                            "data" : [
-                                                {
-                                                    "rsrvNum":"1",
-                                                    "rsrvDate":"2022-07-17",
-                                                    "rsrvState":"사용중",
-                                                    "rsrvCate":"분석의뢰"
-                                                },
-                                                {
-                                                    "rsrvNum":"2",
-                                                    "rsrvDate":"2022-07-17",
-                                                    "rsrvState":"사용안함",
-                                                    "rsrvCate":"분석의뢰2"
-                                                }
-                                            ]
-                                        },
-                                        "21":{
-                                            "isRsrv": "Y",
-                                            "data" : []
-                                        },
-                                        "31":{
-                                            "isRsrv": "Y",
-                                            "data" : [
-                                                {
-                                                    "rsrvNum":"1",
-                                                    "rsrvDate":"2022-07-31",
-                                                    "rsrvState":"사용중",
-                                                    "rsrvCate":"분석의뢰"
-                                                },
-                                                {
-                                                    "rsrvNum":"2",
-                                                    "rsrvDate":"2022-07-31",
-                                                    "rsrvState":"사용안함",
-                                                    "rsrvCate":"분석의뢰2"
-                                                }
-                                            ]
-                                        },
-                                    },
-                                }
-                            }
-                    
-                            calendar.setCalendarData = function(ins){
-                                //calendar 인스턴스 요소
-                                //calendar.$calTd 날짜 td 요소
-                                //calendar.$calBtnDay 날짜 버튼 요소
-                    
-                                //먼저 제이슨 데이터를 받아오세요.
-                                //위의 jsonData예시
-                                // console.log(ins.$calBtnDay);
-                                for(var i = ins.date.firstDay; i < ins.date.firstDay + ins.date.lastDate; i++){
-                                    var nowDay = "";
-                                    nowDay = jsonData[ins.year];
-                                    nowDay != undefined ? nowDay = nowDay[ins.month] : nowDay = false;//현재 달
-                    
-                                    //데이터 있을 경우
-                                    if(nowDay){
-                                        nowDay = nowDay[i - ins.date.firstDay+1];//현재 날짜
-                                        if(nowDay){
-                                            if (nowDay["isRsrv"] == "Y") {
-                                                ins.cal.$calTd.eq(i).addClass('able');
-                                            } else {
-                                                ins.cal.$calTd.eq(i).addClass('disable');
-                                            }
-                    
-                                            if (nowDay["data"].length > 0) {
-                                                ins.cal.$calBtnDay.eq(i).addClass('act');
-                                            }
-                                        }
-                                    }
-                                }
-                            };
-                            calendar.getCalendarData();//실행
-                    
-                            calendar.btnDayClick(function(calendar, $el){
-                                // //다음달 버튼 커스텀 이벤트
-                                // //calendar 인스턴스 요소
-                                // //$el 이벤트 발생 요소
-                                // event.preventDefault();//클릭방지
-                                // var btnDate = $el.attr('data-date').split('-');
-                                // var nowDateData = jsonData[btnDate[0]][btnDate[1]][btnDate[2]];
-                                // //데이터 존재할 경우에만 변경
-                                // if (nowDateData != undefined && nowDateData["isRsrv"] != "N"){
-                                //     var rsrvTable = $('#reserv-table');
-                                //     var tableTbody = rsrvTable.find('tbody');
-                                //     tableTbody.empty();//기존 데이터 제거
-                    
-                                //     var tableHtml;
-                                //     nowDateData["data"].forEach(function(value, index){
-                                //         tableHtml += '<tr>'
-                                //         tableHtml += '<td>' + value['rsrvNum'] +'</td>'
-                                //         tableHtml += '<td>' + value['rsrvDate'] +'</td>'
-                                //         tableHtml += '<td>' + value['rsrvState'] +'</td>'
-                                //         tableHtml += '<td>' + value['rsrvCate'] +'</td>'
-                                //         tableHtml += '</tr>'
-                                //     });
-                                //     tableTbody.append(tableHtml);
-                                // }
-                            });
-                    
-                            // calendar.btnPrevClick(function(calendar, $el){
-                            // 	//이전달 버튼 커스텀 이벤트
-                            // 	//calendar 인스턴스 요소
-                            // 	//$el 이벤트 발생 요소
-                            // 	//calendar.$calBtnDay 버튼 요소
-                            // });
-                            // calendar.btnNextClick(function(calendar, $el){
-                            // 	//다음달 버튼 커스텀 이벤트
-                            // 	//calendar 인스턴스 요소
-                            // 	//$el 이벤트 발생 요소
-                            // 	//calendar.$calBtnDay 버튼 요소
-                            // });
                         </script>
                     </div>
-    
+
+<pre class="pre">
+    &lt;script&gt;
+        var calendar = new CustomCalendar('#calendar'); //캘린더 생성
+    &lt;/script&gt;
+</pre>
                 </section>
 
             </div>
@@ -243,7 +116,7 @@
         
         <footer id="footer">
             <p class="info">이 사이트는 Screen Size - 600px까지 지원하고 있습니다.</p>
-            <p class="copyright">Copyrightⓒ2022 Whisker All rights reserved.</p>
+            
         </footer>
     
     </div>
