@@ -219,15 +219,27 @@
 .cal-prompt {position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999; background-color: rgba(0,0,0,0.2);}
 .cal-prompt .prompt-box {display: block; position: absolute; top: 50px; left: 50%; max-width: 500px; width: 100%; padding: 25px; border-radius: 15px; background-color: #fff; transform: translateX(-50%);}
 .cal-prompt .prompt-box .tit {display: block; margin-bottom: 15px; font-weight: 600; font-size: 1rem; color: #000000;}
+
 .cal-prompt .prompt-box .cnf-intxt {display: block; width: 100%; height: 40px; padding: 2px 15px; border: 1px solid #dfdfdf; line-height: 34px; font-weight: 400; font-size: 1rem; color: #000000;}
 .cal-prompt .prompt-box .cnf-intxt::placeholder {color: #777777;}
+
 .cal-prompt .prompt-box .cnf-btn {display: block; min-width: 80px; min-height: 36px; padding: 0 10px; border-radius: 4px; background-color: #f0f0f0; line-height: 36px; font-weight: 600; font-size: 14px; color: #000000; text-align: center; cursor: pointer;}
 .cal-prompt .prompt-box .cnf-btn.submit {background-color: #0d6efd; color: #ffffff;}
+
 .cal-prompt .prompt-box .cnf-sel {display: block; position: relative;}
 .cal-prompt .prompt-box .cnf-sel::after {content:""; position: absolute; top: calc(50% - 5px); right: 10px; width: 10px; height: 10px; border-width: 0 3px 3px 0; border-style: solid; border-color: #000; transform: rotate(45deg); box-sizing: border-box;}
 .cal-prompt .prompt-box .cnf-sel > select {display: block; width: 100%; height: 40px; padding: 2px 30px 2px 15px; border: 1px solid #dfdfdf; font-weight: 400; font-size: 1rem; color: #888888;}
 .cal-prompt .prompt-box .cnf-sel > select > option {font-weight: inherit; font-size: inherit; color: inherit;}
 .cal-prompt .prompt-box .cnf-sel > select > option:disabled {background-color: #dfdfdf;}
+
+.cal-prompt .prompt-box .cnf-radio-list {display: flex; margin: 0 -5px; flex-wrap: wrap;}
+.cal-prompt .prompt-box .cnf-radio-list > li {display: block; padding: 0 5px 5px;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio {display: block; position: relative; min-height: 20px; padding-left: 25px; line-height: 1; white-space: normal; cursor: pointer;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"] {position: absolute; overflow: hidden; width: 1px; height: 1px; margin: -1px; clip: rect(0 0 0 0);}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > span {display: inline-block; line-height: 20px; font-weight: 500; font-size: 1rem; vertical-align: middle; color: #000;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > span::before {content:''; position:absolute; top: 0; left: 0; width: 20px; height: 20px; border: 1px solid #dfdfdf; border-radius: 50%; background-color: #fff; box-sizing: border-box;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > span::after {content:""; position:absolute; top: 5px; left: 5px; width: 10px; height: 10px; border-radius: 50%; background-color: #0d6efd; opacity: 0;}
+
 .cal-prompt .prompt-box .btn-wrap {display: flex; padding-top: 15px; justify-content: center;}
 .cal-prompt .prompt-box .btn-wrap > * {margin-right: 10px;}
 .cal-prompt .prompt-box .btn-wrap > *:last-child {margin-right: 0;}
@@ -246,6 +258,18 @@
 .cal-prompt .prompt-box .cnf-btn:focus {color:#000000; background-color: #d6d6d6;}
 .cal-prompt .prompt-box .cnf-btn.submit:hover,
 .cal-prompt .prompt-box .cnf-btn.submit:focus {background-color: #0b5ed7; color:#ffffff;}
+
+/* focused */
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:focus + span {outline: 3px solid #000000;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:focus:not(:focus-visible) + span {outline: none;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:focus + span::before {border-color: #0d6efd; outline: 3px solid #000000;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:focus:not(:focus-visible) + span::before {border-color: #dfdfdf; outline: none;}
+
+/* checked */
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:checked + span {color: #0d6efd;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:checked + span::before,
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:checked:not(:focus-visible) + span::before {border-color: #0d6efd; background-color: #fff;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:checked + span::after {opacity: 1;}
 
 @keyframes prompt {
 	0% {opacity: 0;}

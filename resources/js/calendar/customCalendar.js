@@ -1,7 +1,7 @@
 /*
 **************************
-CustomCalendar 2.0.0
-regDate 2023.06.27
+CustomCalendar 2.0.1
+regDate 2023.10.10
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -133,6 +133,8 @@ function CustomCalendar(el, option){
     this.prompt.content;            //입력창 컨텐츠 클래스 명
     this.prompt.input;              //입력창 컨텐츠 input box 클래스 명
     this.prompt.select;             //입력창 컨텐츠 select box 클래스 명
+    this.prompt.radioList;          //입력창 컨텐츠 radio list 클래스 명
+    this.prompt.radio;              //입력창 컨텐츠 radio box 클래스 명
     this.prompt.value;              //입력창 컨텐츠 값 전달 form 클래스 명
     this.prompt.btnWrap;            //입력창 컨텐츠 버튼 박스 클래스 명
     this.prompt.btn;                //입력창 컨텐츠 버튼 클래스 명
@@ -265,6 +267,8 @@ CustomCalendar.prototype.init = function(el, option){
         this.prompt.content = 'content';
         this.prompt.input = 'cnf-intxt';
         this.prompt.select = 'cnf-sel';
+        this.prompt.radioList = 'cnf-radio-list';
+        this.prompt.radio = 'cnf-radio';
         this.prompt.value = 'cnf-value';
         this.prompt.btnWrap = 'btn-wrap';
         this.prompt.btn = 'cnf-btn';
@@ -405,6 +409,8 @@ CustomCalendar.prototype.init = function(el, option){
         this.prompt.content = option.prompt.content == undefined ? 'content' : option.prompt.content;
         this.prompt.input = option.prompt.input == undefined ? 'cnf-intxt' : option.prompt.input;
         this.prompt.select = option.prompt.select == undefined ? 'cnf-sel' : option.prompt.select;
+        this.prompt.radioList = option.prompt.radioList == undefined ? 'cnf-radio-list' : option.prompt.radioList;
+        this.prompt.radio = option.prompt.radio == undefined ? 'cnf-radio' : option.prompt.radio;
         this.prompt.value = option.prompt.value == undefined ? 'cnf-value' : option.prompt.value;
         this.prompt.btnWrap = option.prompt.btnWrap == undefined ? 'btn-wrap' : option.prompt.btnWrap;
         this.prompt.btn = option.prompt.btn == undefined ? 'cnf-btn' : option.prompt.btn;
@@ -492,13 +498,13 @@ CustomCalendar.prototype.initDate = function(){
     this.date.today = new Date();//오늘 날짜 (달력의 첫 기준)
     this.date.todayYear = this.date.today.getFullYear();//오늘 날짜 기준 년도
     this.date.todayMonth = this.date.today.getMonth()+1;//오늘 날짜 기준 월
-    this.date.todayMonth = this.date.todayMonth < 10 ? "0" + this.date.todayMonth : '';
+    this.date.todayMonth = this.date.todayMonth < 10 ? "0" + this.date.todayMonth : this.date.todayMonth;
     this.date.todayDate = this.date.today.getDate();//오늘 날짜 기준 날짜
     this.date.todayDay = this.date.today.getDay();//오늘 날짜 기준 요일
 
     this.date.year = this.date.today.getFullYear();//설정된 날짜 기준 년도
     this.date.month = this.date.today.getMonth()+1;//설정된 날짜 기준 월
-    this.date.month = this.date.month < 10 ? "0"+this.date.month : '';
+    this.date.month = this.date.month < 10 ? "0"+this.date.month : this.date.month;
 
     this.date.first = new Date(this.date.year, this.date.month-1,1);//설정된 날짜 첫날
     this.date.firstDay = this.date.first.getDay();//설정된 날짜 첫날
@@ -509,14 +515,14 @@ CustomCalendar.prototype.initDate = function(){
         this.date.prev = new Date(this.date.year, this.date.month-1,0);
         this.date.prevYear = this.date.prev.getFullYear();
         this.date.prevMonth = this.date.prev.getMonth()+1;
-        this.date.prevMonth = this.date.prevMonth < 10 ? "0" + this.date.prevMonth : '';
+        this.date.prevMonth = this.date.prevMonth < 10 ? "0" + this.date.prevMonth : this.date.prevMonth;
         this.date.prevDate = this.date.prev.getDate();
         this.date.prevDay = this.date.prev.getDay();
 
         this.date.next = new Date(this.date.year, this.date.month,1);
         this.date.nextYear = this.date.next.getFullYear();
         this.date.nextMonth = this.date.next.getMonth()+1;
-        this.date.nextMonth = this.date.nextMonth < 10 ? "0" + this.date.nextMonth : '';
+        this.date.nextMonth = this.date.nextMonth < 10 ? "0" + this.date.nextMonth : this.date.nextMonth;
         this.date.nextDate = this.date.next.getDate();
         this.date.nextDay = this.date.next.getDay();
     }
@@ -729,14 +735,14 @@ CustomCalendar.prototype.getNewDate = function(){
         this.date.prev = new Date(this.date.year, this.date.month-2,0);
         this.date.prevYear = this.date.prev.getFullYear();
         this.date.prevMonth = this.date.prev.getMonth()+1;
-        this.date.prevMonth = this.date.prevMonth < 10 ? "0" + this.date.prevMonth : '';
+        this.date.prevMonth = this.date.prevMonth < 10 ? "0" + this.date.prevMonth : this.date.prevMonth;
         this.date.prevDate = this.date.prev.getDate();
         this.date.prevDay = this.date.prev.getDay();
     
         this.date.next = new Date(this.date.year, this.date.month,1);
         this.date.nextYear = this.date.next.getFullYear();
         this.date.nextMonth = this.date.next.getMonth()+1;
-        this.date.nextMonth = this.date.nextMonth < 10 ? "0" + this.date.nextMonth : '';
+        this.date.nextMonth = this.date.nextMonth < 10 ? "0" + this.date.nextMonth : this.date.nextMonth;
         this.date.nextDate = this.date.next.getDate();
         this.date.nextDay = this.date.next.getDay();
     }
@@ -1046,6 +1052,20 @@ CustomCalendar.prototype.initEventData = function(){
 }
 CustomCalendar.prototype.setEventData;
 
+//이벤트 데이터 출력
+CustomCalendar.prototype.getEventData = function(){
+    var returnValue = [];
+    calendar.event.data.forEach(function(val, idx){
+        var value = {
+            content : val.content,
+            startDate : val.startDate,
+            endDate : val.endDate,
+            state : val.state
+        }
+        returnValue.push(value);
+    });
+    return returnValue;
+}
 
 /**
  * 이벤트 데이터 생성
@@ -1394,7 +1414,7 @@ CustomCalendar.prototype.onDragRange = function(){
         ins.cal.$td.on('mousemove touchmove', function(e){
             e.preventDefault();
             var isFound = false;
-            var nowLocation = nowLocation = e.type == 'touchmove' ? e.touches[0] : e;
+            var nowLocation = e.type == 'touchmove' ? e.touches[0] : e;
             var nowEl = document.elementsFromPoint(nowLocation.clientX, nowLocation.clientY);
             for (var i = 0; i < nowEl.length; i++) {
                 if (nowEl[i].tagName === 'TD') {
@@ -1567,7 +1587,7 @@ CustomCalendar.prototype.setDateEventData = function(eventValue){
  */
 CustomCalendar.prototype.popPrompt = function(prompt, option){
     var ins = this;
-    var types = ['default', 'category', 'select'];
+    var types = ['default', 'category', 'select', 'radio'];
     if (prompt == undefined || option == undefined) return false;
     option.type = option.type == undefined ? 'default' : option.type;
     if (types.indexOf(option.type) == -1 || (option.type == 'select' && option.options == undefined)) return false;
@@ -1590,7 +1610,15 @@ CustomCalendar.prototype.popPrompt = function(prompt, option){
             var data = {};
             if ($el.hasClass('submit')) {
                 data.key = option.key;
-                data.value = $val.val();
+                if (option.type == 'radio') {
+                    $val = $('.'+ins.prompt.value+':checked');
+                    if ($val.length < 1) {
+                        reject('취소');
+                    }
+                    data.value = $val.val();
+                }else {
+                    data.value = $val.val();
+                }
                 resolve(data);
             } else {
                 reject('취소');
@@ -1630,14 +1658,21 @@ CustomCalendar.prototype.popPrompt = function(prompt, option){
 }
 
 CustomCalendar.prototype.renderPopPrompt = function(prompt, option){
+    var ins = this;
     var html = '';
     html += '<div class="'+ this.prompt.container +'">';
     html += '    <div class="'+ this.prompt.boxWrap +'">';
     html += '        <strong class="'+ this.prompt.title +'">'+ prompt +'</strong>';
     html += '        <div class="'+ this.prompt.content +'">';
-    if (option.type == 'default') {
+    if (option.type == 'default') {//input text
         html += '<input type="text" class="'+ this.prompt.input + ' ' + this.prompt.value +'">';
-    } else {
+    } else if (option.type == 'radio'){//input radio
+        html += '<ul class="'+ this.prompt.radioList +'">';
+        option.options.forEach(function(val, i){
+            html += '<li><label class="'+ ins.prompt.radio +'"><input type="radio" class="'+ ins.prompt.value +'" name="'+ ins.prompt.value +'" value="'+ val +'"><span>'+ val +'</span></label></li>';
+        });
+        html += '</ul>'
+    } else {//select box
         html += '<div class="'+ this.prompt.select +'">';
         html += '   <select class="'+ this.prompt.value +'">';
         option.options.forEach(function(val, i){
