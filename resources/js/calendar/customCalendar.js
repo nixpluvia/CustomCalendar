@@ -1,7 +1,7 @@
 /*
 **************************
-CustomCalendar 2.0.1
-regDate 2023.10.10
+CustomCalendar 2.0.2
+regDate 2023.10.16
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -192,6 +192,7 @@ function CustomCalendar(el, option){
     this.options.showsPast;         //지난 일자 과거처리
     this.options.useDateEvent;      //이벤트 사용 여부
     this.options.useDragRange;      //드래그 사용 여부
+    this.options.eventAuth;         //이벤트 사용 권한
 
     this.icon = {};                 //===아이콘===
     this.icon.filter;               //필터 아이콘
@@ -327,6 +328,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.options.useDateEvent = false;
         this.options.useDragRange = false;
         this.options.useEventPop = true;
+        this.options.eventAuth = true;
     } else {
         option.cal = option.cal == undefined ? this.cal : option.cal;
         this.cal.header = option.cal.header == undefined ? 'cal-header' : option.cal.header;
@@ -474,6 +476,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.options.useDateEvent = option.options.useDateEvent == undefined ? false : option.options.useDateEvent;
         this.options.useDragRange = option.options.useDragRange == undefined ? false : option.options.useDragRange;
         this.options.useEventPop = option.options.useEventPop == undefined ? true : option.options.useEventPop;
+        this.options.eventAuth = option.options.eventAuth == undefined ? true : option.options.eventAuth;
 
 
         option.icon = option.icon == undefined ? this.icon : option.icon;
@@ -569,10 +572,18 @@ CustomCalendar.prototype.renderLayout = function(){
     if (this.options.useDateEvent != true) {
         for(var i=0; i<6; i++){
             layout += '<tr>';
-            for(var j=0; j<7; j++){
-                layout += '<td>';
-                layout += '<a href="#" class="'+ this.cal.btnDay +'"></a>';
-                layout += '</td>';
+            if (this.options.eventAuth) {
+                for(var j=0; j<7; j++){
+                    layout += '<td>';
+                    layout += '<a href="#" class="'+ this.cal.btnDay +'"></a>';
+                    layout += '</td>';
+                }
+            } else {
+                for(var j=0; j<7; j++){
+                    layout += '<td>';
+                    layout += '<span class="'+ this.cal.btnDay +'"></span>';
+                    layout += '</td>';
+                }
             }
             layout += '</tr>';
         }
@@ -581,7 +592,11 @@ CustomCalendar.prototype.renderLayout = function(){
             layout += '<tr>';
             for(var j=0; j<7; j++){
                 layout += '<td>';
-                layout += '<a href="#" class="'+ this.cal.btnDay +'"></a>';
+                if (this.options.eventAuth) {
+                    layout += '<a href="#" class="'+ this.cal.btnDay +'"></a>';
+                } else {
+                    layout += '<span class="'+ this.cal.btnDay +'"></span>';
+                }
                 layout += '<div class="'+ this.pin.container +'">';
                 layout += '</div>';
                 layout += '</td>';
@@ -1023,7 +1038,7 @@ CustomCalendar.prototype.setDateEventInit = function(){
         this.setPrompts();
 
         //날짜 드래그 이벤트
-        if (this.options.useDragRange) {//드래그 사용
+        if (this.options.useDragRange && this.options.eventAuth) {//드래그 사용
             this.onDragRange();
         } else {//클릭 사용
             //날짜 하나만 클릭하는 이벤트 (예정)

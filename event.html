@@ -148,6 +148,7 @@
                                 return value;
                             }
                             calendar.initEventData(); //실행
+                            //calendar.getEventData() //등록된 이벤트 값 가져오기
                         </script>
                     </div>
     
@@ -174,6 +175,7 @@
         options: {
             useDateEvent: true, //이벤트 사용여부
             useDragRange: true, //드래그 사용여부
+            eventAuth: true //이벤트 등록 권한
         }
     });
 
@@ -202,6 +204,7 @@
         return value;
     }
     calendar.initEventData(); //실행
+    //calendar.getEventData() //등록된 이벤트 값 가져오기
 &lt;/script&gt;
 </pre>
                 </section>
