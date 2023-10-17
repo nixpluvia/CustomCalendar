@@ -11,8 +11,8 @@
 	분류그룹 : 캘린더 > 헤더 (타이틀, 버튼)
 	속성순서 : 레이아웃, 박스 모델, 배경, 폰트/정렬, 기타
 -------------------------------------------------------------------*/
-.calendar-wrap .cal-header {display: flex; position:relative; height:60px; margin: 0 auto; padding: 0 20px; background-color: #fafafa; justify-content: center; align-items: center; }
-.calendar-wrap .cal-header .cal-header-box {display: flex; position:relative; max-width: 800px; width:100%;}
+.calendar-wrap .cal-header {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; position:relative; height:60px; margin: 0 auto; padding: 0 20px; background-color: #fafafa; -webkit-box-pack: center; -moz-box-justify-content: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center;}
+.calendar-wrap .cal-header .cal-header-box {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; position:relative; max-width: 800px; width:100%;}
 .calendar-wrap .cal-header .cal-header-box .cal-title {display:block; font-weight: 700; font-size:25px; text-align: center; color:#000; flex-grow: 1;}
 
 .calendar-wrap .cal-header .cal-header-box .btn-cal {display:block; position: relative; width:40px; height: 40px; border:0; border-radius: 5px; background-color: transparent; cursor: pointer;}
@@ -49,14 +49,14 @@
 	분류그룹 : 캘린더 > 헤더 (타이틀, 버튼) > 필터
 	속성순서 : 레이아웃, 박스 모델, 배경, 폰트/정렬, 기타
 -------------------------------------------------------------------*/
-.calendar-wrap .cal-header .cal-utils {display: flex; position: absolute; top: 0; right: 20px; height: 100%; align-items: center;}
-.calendar-wrap .cal-header .cal-utils .btn-filter {display: flex; width: 30px; height: 30px; border-radius: 5px; background-color: transparent; align-items: center; justify-content: center;}
+.calendar-wrap .cal-header .cal-utils {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; position: absolute; top: 0; right: 20px; height: 100%; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center;}
+.calendar-wrap .cal-header .cal-utils .btn-filter {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; width: 30px; height: 30px; border-radius: 5px; background-color: transparent; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: center; -moz-box-justify-content: center; -ms-flex-pack: center; justify-content: center;}
 .calendar-wrap .cal-header .cal-utils .btn-filter .i-filter {display: block; width: 20px; height: 20px;}
 .calendar-wrap .cal-header .cal-utils .btn-filter .i-filter .p1 {fill: #141414;}
 
 .calendar-wrap .cal-filter {overflow: hidden; position: absolute; top: 0; right: 0; z-index: 10; width: 100%; height: 100%; background-color: rgba(0,0,0,0.1);}
 .calendar-wrap .cal-filter .flt-box {display: block; width: 440px; height: 100%; margin-left: auto; border-left: 1px solid #e9e9e9; border-radius: 5px 0 0 5px; background-color: #fff; box-shadow: 0 0 5px 0 rgba(0,0,0,0.2);}
-.calendar-wrap .cal-filter .flt-box .flt-header {display: flex; height: 60px; padding: 15px 20px; align-items: center; justify-content: space-between;}
+.calendar-wrap .cal-filter .flt-box .flt-header {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; height: 60px; padding: 15px 20px; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: justify; -moz-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between;}
 .calendar-wrap .cal-filter .flt-box .flt-header .flt-title {display: block; position: relative; padding-left: 10px; line-height: 1; font-weight: 700; font-size: 1.5rem; color: #141414;}
 .calendar-wrap .cal-filter .flt-box .flt-header .flt-title::before {content:""; position: absolute; top: 0.125rem; left: 0; width: 4px; height: 1.25rem; background-color: #0b75cc;}
 .calendar-wrap .cal-filter .flt-box .flt-header .btn-flt-close {display: block; position: relative; width: 30px; height: 30px; margin-left: auto; background-color: transparent;}
@@ -68,13 +68,13 @@
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list {display: block;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item {display: block; margin-bottom: 15px; padding: 15px 10px 10px; border-radius: 5px; background-color: #f7f8fa;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-item-tit {display: block; position: relative; margin-bottom: 15px; line-height: 1; font-weight: 700; font-size: 1.125rem; color: #141414;}
-.calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-ck-list {display: flex; margin: 0 -5px; flex-wrap: wrap;}
+.calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-ck-list {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; margin: 0 -5px; flex-wrap: wrap;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-ck-list .flt-ck-item {display: block; padding: 0 5px;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-ck-list .flt-ck-item .flt-ck {display: block; padding: 5px 0;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-ck-list .flt-ck-item .flt-ck .flt-ck-val {display: block; position: absolute; overflow: hidden; width: 1px; height: 1px; margin: -1px; clip: rect(0 0 0 0); appearance:none;-webkit-appearance: none; -moz-appearance: none;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-list .flt-item .flt-ck-list .flt-ck-item .flt-ck > span {display: block; overflow: hidden; position: relative; padding: 8px 12px; border: 1px solid #e9e9e9; border-radius: 5px; background-color: #ffffff; line-height: 1; font-weight: 500; font-size: 14px; color: #666666; cursor: pointer;}
 
-.calendar-wrap .cal-filter .flt-box .flt-body .flt-btn-wrap {display: flex; margin-top: 20px; justify-content: center;}
+.calendar-wrap .cal-filter .flt-box .flt-body .flt-btn-wrap {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; margin-top: 20px; -webkit-box-pack: center; -moz-box-justify-content: center; -ms-flex-pack: center; justify-content: center;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-btn-wrap .btn-flt {display: block; min-width: 60px; height: 40px; margin-right: 10px; border-radius: 5px;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-btn-wrap .btn-flt:last-child {margin-right: 0;}
 .calendar-wrap .cal-filter .flt-box .flt-body .flt-btn-wrap .btn-flt > span {display: block; font-weight: 600; font-size: 1rem; color: #ffffff;}
@@ -123,7 +123,7 @@
 
 .calendar-wrap .cal-body .calendar tr td .cal-event-container {display: block; position: relative;}
 .calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin {display: block; overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; width: 100%; height: 22px; padding: 1px 0; background-color: #ffffff;}
-.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con {display: flex; overflow: hidden; height: 100%; border-radius: 4px; background-color: #0b75cc; text-align: left; font-size: 14px;}
+.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; overflow: hidden; height: 100%; border-radius: 4px; background-color: #0b75cc; text-align: left; font-size: 14px;}
 .calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con .con-category {display: block; overflow: hidden; padding: 0 4px; border: 2px solid #0b75cc; border-radius: 4px; background-color: #ffffff; line-height: 16px; font-weight: 700; color: #0b75cc; white-space: nowrap; text-overflow: ellipsis; flex-shrink: 0;}
 .calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con .con-title {display: block; overflow: hidden; padding: 0 10px; line-height: 20px; color: #ffffff; white-space: nowrap; text-overflow: ellipsis; flex-grow: 1;}
 .calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-more {display: block; width: 100%; height: 100%; padding: 0 10px; border-radius: 4px; background-color: #585858; line-height: 20px; font-size: 14px; color: #ffffff;}
@@ -183,12 +183,16 @@
 .cal-pop .cal-pop-body {display: block; overflow-x: hidden; overflow-y: auto; max-height: 300px;}
 .cal-pop .cal-pop-body .cal-pop-detail {display: block; padding: 15px; background-color: #ffffff; text-align: left;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list {display: block;}
-.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item {display: flex; margin-bottom: 8px; font-size: 1rem; color: #333333; align-items: center;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; margin-bottom: 8px; font-size: 1rem; color: #333333; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item:last-child {margin-bottom: 0;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-tit {display: block; min-width: 25%; padding-right: 10px; line-height: 20px; font-weight: 600; flex-shrink: 0;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con {display: block; line-height: 20px; word-break: break-all; flex-grow: 1;}
-.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-category {display: flex; flex-wrap: wrap;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-category {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; flex-wrap: wrap;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-category > span {display: block; border-radius: 4px; padding: 0 5px; background-color: #0b75cc; line-height: 20px; color: #ffffff; word-break: break-all;}
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; width: 100%; height: 25px; margin-top: 8px; background-color: #585858; border-radius: 5px; -webkit-box-pack: center; -moz-box-justify-content: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center;}
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete .i-delete {display: block; width: auto; height: 20px;}
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete .i-delete .p1 {fill: #ffffff;}
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete > span {display: block; line-height: 1; font-weight: 600; font-size: 1rem; color: #ffffff;}
 
 .cal-pop .cal-pop-body .cal-pop-list {display: block; padding: 10px; background-color: #ffffff;}
 .cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item {display: block; margin-bottom: 6px;}
@@ -201,6 +205,10 @@
 .cal-pop .cal-pop-body::-webkit-scrollbar {width: 8px; height: 5px; box-sizing: content-box;}
 .cal-pop .cal-pop-body::-webkit-scrollbar-thumb {height: 30%; border-radius: 4px; background: #828282;}
 .cal-pop .cal-pop-body::-webkit-scrollbar-track {padding: 0 5px; background: #e4e4e4;}
+
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete {transition: background 0.3s;}
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete:focus,
+.cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete:hover {background-color: #0b75cc;}
 
 /*-------------------------------------------------------------------
 	@media
@@ -232,7 +240,7 @@
 .cal-prompt .prompt-box .cnf-sel > select > option {font-weight: inherit; font-size: inherit; color: inherit;}
 .cal-prompt .prompt-box .cnf-sel > select > option:disabled {background-color: #dfdfdf;}
 
-.cal-prompt .prompt-box .cnf-radio-list {display: flex; margin: 0 -5px; flex-wrap: wrap;}
+.cal-prompt .prompt-box .cnf-radio-list {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; margin: 0 -5px; flex-wrap: wrap;}
 .cal-prompt .prompt-box .cnf-radio-list > li {display: block; padding: 0 5px 5px;}
 .cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio {display: block; position: relative; min-height: 20px; padding-left: 25px; line-height: 1; white-space: normal; cursor: pointer;}
 .cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"] {position: absolute; overflow: hidden; width: 1px; height: 1px; margin: -1px; clip: rect(0 0 0 0);}
@@ -240,7 +248,7 @@
 .cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > span::before {content:''; position:absolute; top: 0; left: 0; width: 20px; height: 20px; border: 1px solid #dfdfdf; border-radius: 50%; background-color: #fff; box-sizing: border-box;}
 .cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > span::after {content:""; position:absolute; top: 5px; left: 5px; width: 10px; height: 10px; border-radius: 50%; background-color: #0d6efd; opacity: 0;}
 
-.cal-prompt .prompt-box .btn-wrap {display: flex; padding-top: 15px; justify-content: center;}
+.cal-prompt .prompt-box .btn-wrap {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; padding-top: 15px; -webkit-box-pack: center; -moz-box-justify-content: center; -ms-flex-pack: center; justify-content: center;}
 .cal-prompt .prompt-box .btn-wrap > * {margin-right: 10px;}
 .cal-prompt .prompt-box .btn-wrap > *:last-child {margin-right: 0;}
 

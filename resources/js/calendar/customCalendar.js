@@ -1,7 +1,7 @@
 /*
 **************************
-CustomCalendar 2.0.2
-regDate 2023.10.16
+CustomCalendar 2.0.3
+regDate 2023.10.17
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -125,6 +125,7 @@ function CustomCalendar(el, option){
     this.pop.detail.item;           //상세 항목 아이템 클래스 명
     this.pop.detail.tit;            //상세 항목 아이템 제목 클래스 명
     this.pop.detail.itemCon;        //상세 항목 아이템 컨텐츠 클래스 명
+    this.pop.detail.btnDelete;      //상세 항목 삭제 버튼
 
     this.prompt = {};               //===입력창===
     this.prompt.container;          //입력창 클래스 명
@@ -192,10 +193,15 @@ function CustomCalendar(el, option){
     this.options.showsPast;         //지난 일자 과거처리
     this.options.useDateEvent;      //이벤트 사용 여부
     this.options.useDragRange;      //드래그 사용 여부
+    this.options.useEventPop;       //이벤트 팝업 사용 여부
+    this.options.useFilter;         //이벤트 필터 사용 여부
+    this.options.useCustomRender;   //이벤트 수동렌더링 사용 여부
     this.options.eventAuth;         //이벤트 사용 권한
+    this.options.useDelete;         //이벤트 삭제 사용 여부
 
     this.icon = {};                 //===아이콘===
     this.icon.filter;               //필터 아이콘
+    this.icon.delete;               //삭제 아이콘
 
     this.init(el, option);//초기화 실행
     // this.info();
@@ -261,6 +267,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.pop.detail.item = 'detail-item';
         this.pop.detail.tit = 'item-tit';
         this.pop.detail.itemCon = 'item-con';
+        this.pop.detail.btnDelete = 'btn-cal-delete';
 
         this.prompt.container = 'cal-prompt';
         this.prompt.boxWrap = 'prompt-box';
@@ -328,7 +335,13 @@ CustomCalendar.prototype.init = function(el, option){
         this.options.useDateEvent = false;
         this.options.useDragRange = false;
         this.options.useEventPop = true;
+        this.options.useFilter = true;
+        this.options.useCustomRender = false;
         this.options.eventAuth = true;
+        this.options.useDelete = false;
+
+        this.icon.filter = '<i-filter class="i i-filter"></i-filter>';
+        this.icon.delete = '<i-delete class="i i-delete"></i-delete>';
     } else {
         option.cal = option.cal == undefined ? this.cal : option.cal;
         this.cal.header = option.cal.header == undefined ? 'cal-header' : option.cal.header;
@@ -402,6 +415,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.pop.detail.item = option.pop.detail.item == undefined ? 'detail-item' : option.pop.detail.item;
         this.pop.detail.tit = option.pop.detail.tit == undefined ? 'item-tit' : option.pop.detail.tit;
         this.pop.detail.itemCon = option.pop.detail.itemCon == undefined ? 'item-con' : option.pop.detail.itemCon;
+        this.pop.detail.btnDelete = option.pop.detail.btnDelete == undefined ? 'btn-cal-delete' : option.pop.detail.btnDelete;
 
 
         option.prompt = option.prompt == undefined ? this.prompt : option.prompt;
@@ -476,11 +490,15 @@ CustomCalendar.prototype.init = function(el, option){
         this.options.useDateEvent = option.options.useDateEvent == undefined ? false : option.options.useDateEvent;
         this.options.useDragRange = option.options.useDragRange == undefined ? false : option.options.useDragRange;
         this.options.useEventPop = option.options.useEventPop == undefined ? true : option.options.useEventPop;
+        this.options.useFilter = option.options.useFilter == undefined ? true : option.options.useFilter;
+        this.options.useCustomRender = option.options.useCustomRender == undefined ? false : option.options.useCustomRender;
         this.options.eventAuth = option.options.eventAuth == undefined ? true : option.options.eventAuth;
+        this.options.useDelete = option.options.useDelete == undefined ? false : option.options.useDelete;
 
 
         option.icon = option.icon == undefined ? this.icon : option.icon;
         this.icon.filter = option.icon.filter == undefined ? '<i-filter class="i i-filter"></i-filter>' : option.icon.filter;
+        this.icon.delete = option.icon.delete == undefined ? '<i-delete class="i i-delete"></i-delete>' : option.icon.delete;
     }
 
     this.initDate(); //날짜 데이터 설정
@@ -549,7 +567,7 @@ CustomCalendar.prototype.renderLayout = function(){
     layout += '</strong>';
     layout += '<button type="button" class="'+ this.cal.btnMonths +' '+ this.cal.btnMonthNext +'"></button>';
     layout += '</div>';
-    if (this.options.useDateEvent && this.event.items.length > 0) {
+    if (this.options.useDateEvent && this.options.useFilter && this.event.items.length > 0) {
         layout += '<div class="'+ this.cal.utils.container +'">';
         layout += '<button class="'+ this.cal.utils.btnFilter +'" type="button">';
         layout += this.icon.filter;
@@ -721,8 +739,8 @@ CustomCalendar.prototype.renderDate = function(){
     }
 
     ins.renderCustomData();
-    if (ins.options.useDateEvent) {
-        ins.options.useEventPop ? ins.initEventData() : '';
+    if (ins.options.useDateEvent && ins.options.useEventPop && !ins.options.useCustomRender) {
+        ins.initEventData();
     }
 }
 
@@ -879,6 +897,42 @@ CustomCalendar.prototype.resetDateEvent = function(isInit){
     });
 }
 
+/**
+ * Data 삭제
+ * @param {html} el element
+ * @param {id} id 데이터 아이디
+ * @return {void}
+ */
+CustomCalendar.prototype.removeEventData = function(el, id){
+    var ins = this;
+    var newData = [];
+    var removeData;
+    if (confirm('정말 삭제하시겠습니까?')) {
+        //popup 닫기
+        el.closest('.'+ins.pop.container).remove();
+        //data 변경
+        this.event.data.forEach(function(val, idx){
+            if (val.id == id) {
+                removeData = val;
+                ins.event.data.splice(idx, 1);
+            } else {
+                newData.push({
+                    content : val.content,
+                    startDate : val.startDate,
+                    endDate : val.endDate,
+                    state : val.state
+                });
+            }
+        });
+        if (typeof this.onDeleteCallback == 'function'){
+            this.onDeleteCallback.call(el, removeData);
+        }
+        //재렌더링
+        this.renderEventData(newData);
+    }
+}
+//삭제 callback
+CustomCalendar.prototype.onDeleteCallback;
 
 /**
  * 날짜 값이 일치하는 td의 index 찾기
@@ -1032,7 +1086,9 @@ CustomCalendar.prototype.setPrompts = function(){
 CustomCalendar.prototype.setDateEventInit = function(){
     //이벤트 사용 여부
     if (this.options.useDateEvent) {
-        this.setFilterEvents();
+        if (this.options.useFilter) {
+            this.setFilterEvents();
+        }
 
         //prompt 설정
         this.setPrompts();
@@ -1055,7 +1111,8 @@ CustomCalendar.prototype.setDateEventInit = function(){
 CustomCalendar.prototype.initEventData = function(){
     if (typeof(this.setEventData) == "function") {
         this.resetDateEvent(true);
-        var value = this.setEventData();
+        var ins = this;
+        var value = ins.setEventData();
         if (Array.isArray(value)) {
             //이벤트 일치 여부
             if (this.refactorEventData(value)){
@@ -1065,12 +1122,24 @@ CustomCalendar.prototype.initEventData = function(){
         }
     }
 }
+
+//이벤트 데이터 렌더링
+CustomCalendar.prototype.renderEventData = function(value){
+    if (value != undefined && Array.isArray(value)) {
+        this.resetDateEvent(true);
+        //이벤트 일치 여부
+        if (this.refactorEventData(value)){
+            this.setDateEventSort();
+            this.renderDateEventPin(this.event.dataRows);
+        }
+    }
+}
 CustomCalendar.prototype.setEventData;
 
 //이벤트 데이터 출력
 CustomCalendar.prototype.getEventData = function(){
     var returnValue = [];
-    calendar.event.data.forEach(function(val, idx){
+    this.event.data.forEach(function(val, idx){
         var value = {
             content : val.content,
             startDate : val.startDate,
@@ -1105,7 +1174,7 @@ CustomCalendar.prototype.refactorEventData = function(data){
     this.event.data = data;
 
     data.forEach(function(val, i){
-        val.id = ins.event.name + i;
+        if (val.id == undefined) val.id = ins.event.name + i;
         var elArray = [];
         var hasDate = false;
         ins.cal.$td.each(function(index, el){
@@ -1148,7 +1217,7 @@ CustomCalendar.prototype.refactorEventData = function(data){
             var rowKey = 'row_' + value.row;
             ins.event.dataRows[rowKey] == undefined ? ins.event.dataRows[rowKey] = [] : '';
 
-            value.id = ins.event.name + i;
+            value.id = val.id;
             value.rank = 0;
             value.content = val.content;
             value.totalRange = val.totalRange;
@@ -1485,9 +1554,6 @@ CustomCalendar.prototype.onDragRange = function(){
 CustomCalendar.prototype.onDragEnd = function(){
     var ins = this;
     this.resetSelected();
-    if (typeof ins.onCustomDragEnd == 'function') { //커스텀 콜백함수
-        ins.onCustomDragEnd();
-    }
 
     var eventContent = {};
     //promise 실행 함수 배열 생성
@@ -1503,7 +1569,7 @@ CustomCalendar.prototype.onDragEnd = function(){
         }
     });
 
-    //초기값 redeuce의 promise.resolve를 실행
+    //초기값 reduce의 promise.resolve를 실행
     promises.reduce((promiseChain, nowPromise) => {
         return promiseChain.then(() => {
             return nowPromise();
@@ -1512,11 +1578,14 @@ CustomCalendar.prototype.onDragEnd = function(){
         ins.setDateEventData(eventContent);
         ins.setDateEventSort();
         ins.renderDateEventPin(ins.event.dataRows);
+        if (typeof ins.onItemAddCallback == 'function') ins.onItemAddCallback(); //커스텀 콜백함수
     }).catch(function(err){
         // console.log(err);
     });
 }
-CustomCalendar.prototype.onCustomDragEnd;
+
+//드래그 이벤트 등록 후 커스텀
+CustomCalendar.prototype.onItemAddCallback;
 
 
 /**
@@ -1779,6 +1848,20 @@ CustomCalendar.prototype.setEventPop = function(){
         });
         ins.renderEventPop(e, option);
     });
+
+
+    //삭제버튼 사용 여부
+    if (this.options.useDelete) {
+        this.cal.$body.on('mousedown touchstart keydown', '.'+ins.pop.detail.btnDelete, function(e){
+            if (e.type == 'keydown') {
+                var key = false;
+                key = e.key === 'Enter' || e.keyCode === 13 ? true : key;
+                if (!key) return;
+            }
+            var id = this.getAttribute(ins.attr.event.id);
+            ins.removeEventData(this, id);
+        });
+    }
 }
 
 
@@ -1862,14 +1945,10 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
         html += '</li>';
     }
     for(var val in option.data.content) {
-        console.log(val);
         var title;
         this.event.items.forEach(function(v){
-            console.log(v);
-            if (val == v.key) {
-                title = v.title;
-            }
-        })
+            if (val == v.key) title = v.title;
+        });
         if (val == 'category') continue;
         html += '<li class="'+ ins.pop.detail.item +'">';
         html += '<strong class="'+ ins.pop.detail.tit +'">'+ title +'</strong>';
@@ -1885,6 +1964,9 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
     html += '<div class="'+ ins.pop.detail.itemCon +'">'+ option.data.endDate +'</div>';
     html += '</li>';
     html += '</ul>';
+    if (ins.options.useDelete) {
+        html += '<button type="button" class="'+ ins.pop.detail.btnDelete +'" '+ ins.attr.event.id +'="'+ option.data.id +'" >'+ ins.icon.delete +'<span>삭제</span></button>';
+    }
     html += '</div>';
     return html;
 }
@@ -1917,6 +1999,18 @@ CustomCalendar.prototype.setPopMoreHtml = function(option){
 }
 
 
+/**
+ * 이벤트 삭제 버튼 이벤트 등록
+ *
+ * @param {Object} option 이벤트 옵션
+ * @return {void} html 구조 텍스트 반환
+ */
+CustomCalendar.prototype.onDeleteItem = function(){
+    var ins = this;
+    this.cal.$btnMonthPrev.on('click', function(){
+        customEvent(ins, this);
+    });
+}
 
 /*============================================================================================
     @filter
@@ -2049,4 +2143,18 @@ class filterIcon extends HTMLElement {
         + '</svg>';
     }
 }
+class deleteIcon extends HTMLElement {
+    connectedCallback() {
+        let newIcon = document.createElement('svg');
+        this.appendChild(newIcon);
+        this.innerHTML = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">'
+        + '<path class="p1" d="M27,36.9v-14c0-1.1-0.9-2-2-2s-2,0.9-2,2v14c0,1.1,0.9,2,2,2S27,38,27,36.9z"/>'
+        + '<path class="p1" d="M35,36.9v-14c0-1.1-0.9-2-2-2s-2,0.9-2,2v14c0,1.1,0.9,2,2,2S35,38,35,36.9z"/>'
+        + '<path class="p1" d="M19,36.9v-14c0-1.1-0.9-2-2-2s-2,0.9-2,2v14c0,1.1,0.9,2,2,2S19,38,19,36.9z"/>'
+        + '<path class="p1" d="M40.7,15.4c-1,0.2-1.7,1.1-1.7,2.1v28c0,0.3-0.2,0.5-0.5,0.5H11.3c-0.3,0-0.5-0.2-0.5-0.5v-28 c0-1-0.7-1.9-1.7-2.1c-1.3-0.2-2.3,0.8-2.3,2V46v2c0,1.1,0.9,2,2,2h2H39h2c1.1,0,2-0.9,2-2v-2V17.4C43,16.2,41.9,15.2,40.7,15.4z"/>'
+        + '<path class="p1" d="M43,7.4h-9.1V4V2c0-1.1-0.9-2-2-2h-2h-4.8h0h-4.8h-2c-1.1,0-2,0.9-2,2v2v3.4H6.8c-1.1,0-2,0.9-2,2s0.9,2,2,2 h18.3h0H43c1.1,0,2-0.9,2-2S44.1,7.4,43,7.4z M29.9,6.9c0,0.3-0.2,0.5-0.5,0.5h-4.3h0h-4.3c-0.3,0-0.5-0.2-0.5-0.5V4.5 c0-0.3,0.2-0.5,0.5-0.5h4.3h0h4.3c0.3,0,0.5,0.2,0.5,0.5V6.9z"/>'
+        + '</svg>';
+    }
+}
 customElements.define('i-filter', filterIcon);
+customElements.define('i-delete', deleteIcon);
