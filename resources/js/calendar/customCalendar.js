@@ -1,7 +1,7 @@
 /*
 **************************
-CustomCalendar 2.0.3
-regDate 2023.10.17
+CustomCalendar 2.0.4
+regDate 2023.10.18
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -105,7 +105,8 @@ function CustomCalendar(el, option){
     this.pin.more;                  //핀 더보기 클래스 명
     this.pin.content;               //핀 컨텐츠 (카테고리, 제목) 클래스 명
     this.pin.extension;             //핀 확장 클래스 명 (다음줄)
-    this.pin.category;              //핀 카테고리 클래스 명
+    this.pin.marker;                //핀 마커 카테고리 클래스 명
+    this.pin.markerCategory;        //핀 마커 카테고리 이름
 
     this.pop = {};                  //===캘린더 팝업===
     this.pop.container;             //팝업 박스
@@ -120,7 +121,7 @@ function CustomCalendar(el, option){
     this.pop.list.pin;              //더보기 핀 클래스명
     this.pop.detail = {};           //---상세보기---
     this.pop.detail.content;        //상세 컨텐츠 클래스 명
-    this.pop.detail.category;       //상세 카테고리 클래스 명
+    this.pop.detail.marker;         //상세 마커 카테고리 클래스 명
     this.pop.detail.list;           //상세 항목 리스트 클래스 명
     this.pop.detail.item;           //상세 항목 아이템 클래스 명
     this.pop.detail.tit;            //상세 항목 아이템 제목 클래스 명
@@ -136,6 +137,8 @@ function CustomCalendar(el, option){
     this.prompt.select;             //입력창 컨텐츠 select box 클래스 명
     this.prompt.radioList;          //입력창 컨텐츠 radio list 클래스 명
     this.prompt.radio;              //입력창 컨텐츠 radio box 클래스 명
+    this.prompt.checkList;          //입력창 컨텐츠 check list 클래스 명
+    this.prompt.check;              //입력창 컨텐츠 check box 클래스 명
     this.prompt.value;              //입력창 컨텐츠 값 전달 form 클래스 명
     this.prompt.btnWrap;            //입력창 컨텐츠 버튼 박스 클래스 명
     this.prompt.btn;                //입력창 컨텐츠 버튼 클래스 명
@@ -250,7 +253,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.pin.more = 'cal-pin-more';
         this.pin.content = 'cal-pin-con';
         this.pin.extension = 'cal-extension';
-        this.pin.category = 'con-category';
+        this.pin.marker = 'con-marker';
         
         this.pop.container = 'cal-pop';
         this.pop.head = 'cal-pop-head';
@@ -262,7 +265,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.pop.list.item = 'cal-pop-list-item';
         this.pop.list.pin = 'cal-pop-list-pin';
         this.pop.detail.content = 'cal-pop-detail';
-        this.pop.detail.category = 'e-category';
+        this.pop.detail.marker = 'e-marker';
         this.pop.detail.list = 'detail-list';
         this.pop.detail.item = 'detail-item';
         this.pop.detail.tit = 'item-tit';
@@ -277,6 +280,8 @@ CustomCalendar.prototype.init = function(el, option){
         this.prompt.select = 'cnf-sel';
         this.prompt.radioList = 'cnf-radio-list';
         this.prompt.radio = 'cnf-radio';
+        this.prompt.checkList = 'cnf-check-list';
+        this.prompt.check = 'cnf-check';
         this.prompt.value = 'cnf-value';
         this.prompt.btnWrap = 'btn-wrap';
         this.prompt.btn = 'cnf-btn';
@@ -392,7 +397,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.pin.more = option.pin.more == undefined ? 'cal-pin-more' : option.pin.more;
         this.pin.content = option.pin.content == undefined ? 'cal-pin-con' : option.pin.content;
         this.pin.title = option.pin.title == undefined ? 'con-title' : option.pin.title;
-        this.pin.category = option.pin.category == undefined ? 'con-category' : option.pin.category;
+        this.pin.marker = option.pin.marker == undefined ? 'con-marker' : option.pin.marker;
 
 
         option.pop = option.pop == undefined ? this.pop : option.pop;
@@ -410,7 +415,7 @@ CustomCalendar.prototype.init = function(el, option){
         
         option.pop.detail = option.pop.detail == undefined ? this.pop.detail : option.pop.detail;
         this.pop.detail.content = option.pop.detail.content == undefined ? 'cal-pop-detail' : option.pop.detail.content;
-        this.pop.detail.category = option.pop.detail.category == undefined ? 'e-category' : option.pop.detail.category;
+        this.pop.detail.marker = option.pop.detail.marker == undefined ? 'e-marker' : option.pop.detail.marker;
         this.pop.detail.list = option.pop.detail.list == undefined ? 'detail-list' : option.pop.detail.list;
         this.pop.detail.item = option.pop.detail.item == undefined ? 'detail-item' : option.pop.detail.item;
         this.pop.detail.tit = option.pop.detail.tit == undefined ? 'item-tit' : option.pop.detail.tit;
@@ -427,6 +432,8 @@ CustomCalendar.prototype.init = function(el, option){
         this.prompt.select = option.prompt.select == undefined ? 'cnf-sel' : option.prompt.select;
         this.prompt.radioList = option.prompt.radioList == undefined ? 'cnf-radio-list' : option.prompt.radioList;
         this.prompt.radio = option.prompt.radio == undefined ? 'cnf-radio' : option.prompt.radio;
+        this.prompt.checkList = option.prompt.checkList == undefined ? 'cnf-check-list' : option.prompt.checkList;
+        this.prompt.check = option.prompt.check == undefined ? 'cnf-check' : option.prompt.check;
         this.prompt.value = option.prompt.value == undefined ? 'cnf-value' : option.prompt.value;
         this.prompt.btnWrap = option.prompt.btnWrap == undefined ? 'btn-wrap' : option.prompt.btnWrap;
         this.prompt.btn = option.prompt.btn == undefined ? 'cnf-btn' : option.prompt.btn;
@@ -914,7 +921,6 @@ CustomCalendar.prototype.removeEventData = function(el, id){
         this.event.data.forEach(function(val, idx){
             if (val.id == id) {
                 removeData = val;
-                ins.event.data.splice(idx, 1);
             } else {
                 newData.push({
                     content : val.content,
@@ -1076,6 +1082,21 @@ CustomCalendar.prototype.setPrompts = function(){
 }
 
 
+/**
+ * pin marker 카테고리 key값 설정
+ * @return {void};
+ */
+CustomCalendar.prototype.setMarkerCategory = function(){
+    var ins = this;
+    this.event.items.forEach(function(v){
+        if (v.marker) {
+            ins.pin.markerCategory = v.key;
+            return false;
+        }
+    });
+}
+
+
 /*-------------------------------------------------------------------
     @Date Event > 초기화
 -------------------------------------------------------------------*/
@@ -1092,6 +1113,8 @@ CustomCalendar.prototype.setDateEventInit = function(){
 
         //prompt 설정
         this.setPrompts();
+        //marker data 설정
+        this.setMarkerCategory();
 
         //날짜 드래그 이벤트
         if (this.options.useDragRange && this.options.eventAuth) {//드래그 사용
@@ -1420,10 +1443,10 @@ CustomCalendar.prototype.renderDateEventPin = function(data){
                 html += 'data-clone="'+ val.isClone +'" ';
                 html += ins.attr.event.startDate +'="'+ val.startDate +'" >';
                 html += '<div class="'+ ins.pin.content +'" >';
-                if (val.content.category) {
-                    html += '<div class="'+ ins.pin.category +'">';
-                    html += val.content.category;
-                    html += '</div>';    
+                if (ins.pin.markerCategory) {
+                    html += '<div class="'+ ins.pin.marker +'">';
+                    html += val.content[ins.pin.markerCategory];
+                    html += '</div>';
                 }
                 html += '<div class="'+ ins.pin.title +'">';
                 html += val.content.title;
@@ -1575,10 +1598,23 @@ CustomCalendar.prototype.onDragEnd = function(){
             return nowPromise();
         });
     }, Promise.resolve()).then((result) =>{
-        ins.setDateEventData(eventContent);
-        ins.setDateEventSort();
-        ins.renderDateEventPin(ins.event.dataRows);
-        if (typeof ins.onItemAddCallback == 'function') ins.onItemAddCallback(); //커스텀 콜백함수
+        if (ins.options.useCustomRender && typeof ins.onItemAddCallback == 'function') {
+            new Promise((resolve, reject)=>{
+                eventContent.startDate = ins.drag.startDate;
+                eventContent.endDate = ins.drag.endDate;
+                ins.onItemAddCallback.call(ins, eventContent, resolve, reject) //커스텀 콜백함수
+            }).then(result => {
+                ins.setDateEventData(result);
+                ins.setDateEventSort();
+                ins.renderDateEventPin(ins.event.dataRows);
+            }).catch(result => {
+                alert(result ? result : '등록 취소 되었습니다.');
+            });
+        } else {
+            ins.setDateEventData(eventContent);
+            ins.setDateEventSort();
+            ins.renderDateEventPin(ins.event.dataRows);
+        }
     }).catch(function(err){
         // console.log(err);
     });
@@ -1595,7 +1631,15 @@ CustomCalendar.prototype.onItemAddCallback;
  */
 CustomCalendar.prototype.setDateEventData = function(eventValue){
     var ins = this;
-    var eventId = this.event.name + this.event.data.length;
+    var eventId;
+    if (eventValue.id != undefined) {
+        eventId = eventValue.id;
+        delete eventValue.id;
+        delete eventValue.startDate;
+        delete eventValue.endDate;
+    } else {
+        eventId = this.event.name + this.event.data.length;
+    }
 
     //클론 확인 && row별 데이터 생성
     var trs = [];
@@ -1671,14 +1715,14 @@ CustomCalendar.prototype.setDateEventData = function(eventValue){
  */
 CustomCalendar.prototype.popPrompt = function(prompt, option){
     var ins = this;
-    var types = ['default', 'category', 'select', 'radio'];
+    var types = ['default', 'select', 'radio', 'checkbox'];
     if (prompt == undefined || option == undefined) return false;
     option.type = option.type == undefined ? 'default' : option.type;
     if (types.indexOf(option.type) == -1 || (option.type == 'select' && option.options == undefined)) return false;
     this.renderPopPrompt(prompt, option);
 
     var $container = $('.'+ins.prompt.container);
-    var $boxWrap = $('.'+ins.prompt.boxWrap)
+    var $boxWrap = $('.'+ins.prompt.boxWrap);
     var $btn = $('.'+ins.prompt.btn);
     var $val = $('.'+ins.prompt.value);
     $val.focus();
@@ -1694,14 +1738,23 @@ CustomCalendar.prototype.popPrompt = function(prompt, option){
             var data = {};
             if ($el.hasClass('submit')) {
                 data.key = option.key;
-                if (option.type == 'radio') {
+                if (option.type == 'radio') { //라디오박스
                     $val = $('.'+ins.prompt.value+':checked');
-                    if ($val.length < 1) {
-                        reject('취소');
-                    }
+                    if ($val.length < 1) reject('취소');
+
                     data.value = $val.val();
-                }else {
+                } else if (option.type == 'checkbox') { //체크박스
+                    $val = $('.'+ins.prompt.value+':checked');
+                    console.log($val);
+                    if ($val.length < 1) reject('취소');
+
+                    data.value = [];
+                    $val.each(function(idx, el){
+                        data.value.push(el.value);
+                    });
+                } else { //input박스
                     data.value = $val.val();
+                    if (data.value == '') reject('취소');
                 }
                 resolve(data);
             } else {
@@ -1753,7 +1806,19 @@ CustomCalendar.prototype.renderPopPrompt = function(prompt, option){
     } else if (option.type == 'radio'){//input radio
         html += '<ul class="'+ this.prompt.radioList +'">';
         option.options.forEach(function(val, i){
-            html += '<li><label class="'+ ins.prompt.radio +'"><input type="radio" class="'+ ins.prompt.value +'" name="'+ ins.prompt.value +'" value="'+ val +'"><span>'+ val +'</span></label></li>';
+            var ck = i == 0 ? 'checked' : '';
+            html += '<li><label class="'+ ins.prompt.radio +'">';
+            html += '<input type="radio" class="'+ ins.prompt.value +'" name="'+ ins.prompt.value +'" value="'+ val +'" '+ ck +'><span>'+ val +'</span>';
+            html += '</label></li>';
+        });
+        html += '</ul>'
+    } else if (option.type == 'checkbox') {
+        html += '<ul class="'+ this.prompt.checkList +'">';
+        option.options.forEach(function(val, i){
+            var ck = i == 0 ? 'checked' : '';
+            html += '<li><label class="'+ ins.prompt.check +'">';
+            html += '<input type="checkbox" class="'+ ins.prompt.value +'" name="'+ ins.prompt.value +'" value="'+ val +'" '+ ck +'><span>'+ val +'</span>';
+            html += '</label></li>';
         });
         html += '</ul>'
     } else {//select box
@@ -1934,26 +1999,39 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
     var html = '';
     html += '<div class="'+ ins.pop.detail.content +'">';
     html += '<ul class="'+ ins.pop.detail.list +'">';
-    if (option.data.content.category) {
-        html += '<li class="'+ ins.pop.detail.item +'">';
-        html += '<strong class="'+ ins.pop.detail.tit +'">'+ ins.lang.category +'</strong>';
-        html += '<div class="'+ ins.pop.detail.itemCon +'">';
-        html += '<div class="'+ ins.pop.detail.category +'">';
-        html += '<span>'+ option.data.content.category +'</span>';
-        html += '</div>';
-        html += '</div>';
-        html += '</li>';
-    }
     for(var val in option.data.content) {
         var title;
+        var marker = false; //마커 태그
+        //카테고리 명칭
         this.event.items.forEach(function(v){
-            if (val == v.key) title = v.title;
+            if (val == v.key) {
+                title = v.title;
+                marker = v.marker != undefined ? v.marker : false;
+                return false;
+            };
         });
-        if (val == 'category') continue;
-        html += '<li class="'+ ins.pop.detail.item +'">';
-        html += '<strong class="'+ ins.pop.detail.tit +'">'+ title +'</strong>';
-        html += '<div class="'+ ins.pop.detail.itemCon +'">'+ option.data.content[val] +'</div>';
-        html += '</li>';
+        if (marker) {
+            html += '<li class="'+ ins.pop.detail.item +'">';
+            html += '<strong class="'+ ins.pop.detail.tit +'">'+ ins.lang.category +'</strong>';
+            html += '<div class="'+ ins.pop.detail.itemCon +'">';
+            html += '<div class="'+ ins.pop.detail.marker +'">';
+            html += '<span>'+ option.data.content.category +'</span>';
+            html += '</div>';
+            html += '</div>';
+            html += '</li>';
+        } else {
+            html += '<li class="'+ ins.pop.detail.item +'">';
+            html += '<strong class="'+ ins.pop.detail.tit +'">'+ title +'</strong>';
+            html += '<div class="'+ ins.pop.detail.itemCon +'">';
+            if (Array.isArray(option.data.content[val])) {
+                option.data.content[val].forEach(function(v, idx){
+                    html += option.data.content[val].length == idx+1 ? v : v + ',';
+                });
+            } else {
+                html += option.data.content[val];
+            }
+            html += '</div></li>';
+        }
     }
     html += '<li class="'+ ins.pop.detail.item +'">';
     html += '<strong class="'+ ins.pop.detail.tit +'">'+ ins.lang.startDate +'</strong>';
