@@ -1,7 +1,7 @@
 /*
 **************************
 CustomCalendar 2.0.4
-regDate 2023.10.18
+regDate 2023.10.19
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -1025,6 +1025,31 @@ CustomCalendar.prototype.sortStartDate = function(arr){
 
 
 /**
+ * 이벤트 데이터 날짜 및 rank순 정렬 (기준 startDate & rank)
+ * @param {Object} arr 이벤트 데이터 rows 배열
+ * @return {Array} rank 레벨로 정렬된 배열
+ */
+CustomCalendar.prototype.sortRanking = function(arr){
+    arr.sort(function(a, b){
+        if (a.startDate > b.startDate) {
+            return 1;
+        } else if (a.startDate < b.startDate) {
+            return  -1;
+        } else {
+            if (a.rank > b.rank) {
+                return 1;
+            } else if (a.rank < b.rank) {
+                return  -1;
+            } else {
+               return 0;
+            }
+        }
+    });
+    return arr;
+}
+
+
+/**
  * 선택된 날짜들의 배열
  * @return {Array} String 날짜 데이터들의 배열
  */
@@ -1263,21 +1288,21 @@ CustomCalendar.prototype.refactorEventData = function(data){
  * @return ;
  */
 CustomCalendar.prototype.setDateEventSort = function(data){
-    var ins = this;
     var isReturn = false;
-    var dataRows = ins.event.dataRows;
+    var dataRows = this.event.dataRows;
     if (data != undefined) {
         isReturn = true;
         dataRows = data;
     }
 
+    //rank 생성
     for (var key in dataRows) {
         // dataRows[key] : tr기준 구분
         var value = dataRows[key];
         var common = [];
 
         //날짜 순서로 정렬
-        ins.sortStartDate(value);
+        this.sortStartDate(value);
 
         //이벤트 중복 날짜 찾기
         value.forEach(function(val, i){
@@ -1402,6 +1427,11 @@ CustomCalendar.prototype.setDateEventSort = function(data){
         });
     }
 
+    //날짜 및 rank 순서정렬
+    for (var key in dataRows) {
+        this.sortRanking(dataRows[key]);
+    }
+
     if (isReturn) {
         return dataRows;
     }
@@ -1425,7 +1455,7 @@ CustomCalendar.prototype.renderDateEventPin = function(data){
         value.forEach(function(val, i){
             var $td = val.el;
             var $container = $td.find('.'+ins.pin.container);
-            if (val.rank >= ins.pin.maxNum && $container.find('.'+ins.pin.typeMore).length > 0) return false;
+            if (val.rank > ins.pin.maxNum) return false;
 
             var top = (val.rank * ins.pin.size) + 'px';
             var width = parseInt(val.range) * 100;
@@ -2002,7 +2032,7 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
     for(var val in option.data.content) {
         var title;
         var marker = false; //마커 태그
-        //카테고리 명칭
+        //카테고리 명칭 및 마커 요소
         this.event.items.forEach(function(v){
             if (val == v.key) {
                 title = v.title;
@@ -2012,7 +2042,7 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
         });
         if (marker) {
             html += '<li class="'+ ins.pop.detail.item +'">';
-            html += '<strong class="'+ ins.pop.detail.tit +'">'+ ins.lang.category +'</strong>';
+            html += '<strong class="'+ ins.pop.detail.tit +'">'+ title +'</strong>';
             html += '<div class="'+ ins.pop.detail.itemCon +'">';
             html += '<div class="'+ ins.pop.detail.marker +'">';
             html += '<span>'+ option.data.content.category +'</span>';
