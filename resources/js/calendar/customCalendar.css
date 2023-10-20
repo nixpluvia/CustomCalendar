@@ -38,10 +38,15 @@
 -------------------------------------------------------------------*/
 @media screen and (max-width: 1024px) {
     .calendar-wrap .cal-header {padding: 0 15px;}
+	.calendar-wrap.type-event .cal-header {padding: 0 30px;}
 }
 @media screen and (max-width: 600px) {
     .calendar-wrap .cal-header {height: 50px;}
-    .calendar-wrap .cal-header .cal-header-box .cal-title {font-size: 20px;}
+    .calendar-wrap .cal-header .cal-header-box .cal-title {font-size: 20px; line-height: 40px;}
+}
+@media screen and (max-width: 425px) {
+	.calendar-wrap.type-event .cal-header {padding: 0 10px;}
+    .calendar-wrap .cal-header .cal-header-box .cal-title {font-size: 16px;}
 }
 
 
@@ -156,13 +161,22 @@
     .calendar-wrap .cal-body .calendar tr td .btn-day {width: 25px; height: 25px; line-height: 25px;}
 }
 @media screen and (max-width: 800px) {
-	.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con .con-category {display: none;}
+	.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con .con-marker {display: none;}
 }
 @media screen and (max-width: 600px) {
-    .calendar-wrap .cal-body .calendar th {height: 50px; padding: 8px 0;}
+    .calendar-wrap .cal-body .calendar th {height: 40px; padding: 8px 0; font-size:14px;}
+	.calendar-wrap .cal-body .calendar tr td .btn-day {padding:0 5px; font-size:12px;}
+	.calendar-wrap.type-event .cal-body .calendar tr td .btn-day {padding:0 5px;}
+	.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con .con-title { height: 20px; line-height: 20px; padding:0 4px;}
 }
 @media screen and (max-width: 425px) {
+	.calendar-wrap .cal-body .calendar th {font-size: 12px;}
+	
     .calendar-wrap .cal-body .calendar tr td .btn-day {width: 20px; height: 20px; line-height: 20px;}
+	.calendar-wrap.type-event .cal-body .calendar tr td .btn-day {font-size: 12px;}
+
+	.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-con .con-title {font-size: 10px;}
+	.calendar-wrap .cal-body .calendar tr td .cal-event-container .cal-pin .cal-pin-more {padding: 0; font-size: 10px;}
 }
 
 
@@ -197,7 +211,10 @@
 .cal-pop .cal-pop-body .cal-pop-list {display: block; padding: 10px; background-color: #ffffff;}
 .cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item {display: block; margin-bottom: 6px;}
 .cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item:last-child {margin-bottom: 0;}
-.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-list-pin {display: block; overflow: hidden; width: 100%; height: 24px; padding: 0 10px; border-radius: 4px; background-color: #0b75cc; line-height: 24px; font-size: 1rem; color: #ffffff; text-align: left; white-space: nowrap; text-overflow: ellipsis;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin {display: block; overflow: hidden; width: 100%; height: 20px; border: 0; line-height: 20px; color: #ffffff; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin .cal-pop-pin-con {display: flex; border-radius: 4px; background-color: #0b75cc; font-size: 14px;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin .cal-pop-pin-con .cal-pop-pin-marker {display: block; overflow: hidden; padding: 0 4px; border: 2px solid #0b75cc; border-radius: 4px; background-color: #ffffff; line-height: 16px; font-weight: 700; color: #0b75cc; white-space: nowrap; text-overflow: ellipsis; flex-shrink: 0;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin .cal-pop-pin-con .cal-pop-pin-tit {display: block; overflow: hidden; padding: 0 10px; line-height: 20px; color: #ffffff; text-align: left; white-space: nowrap; text-overflow: ellipsis; flex-grow: 1;}
 
 /*-------------------------------------------------------------------
 	@interaction
@@ -209,6 +226,11 @@
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete {transition: background 0.3s;}
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete:focus,
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete:hover {background-color: #0b75cc;}
+
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin:focus .cal-pop-pin-con,
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin:hover .cal-pop-pin-con {background-color: #56b1f9;}
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin:focus .cal-pop-pin-con .cal-pop-pin-marker,
+.cal-pop .cal-pop-body .cal-pop-list .cal-pop-list-item .cal-pop-pin:hover .cal-pop-pin-con .cal-pop-pin-marker {border-color: #56b1f9;}
 
 /*-------------------------------------------------------------------
 	@media

@@ -1,7 +1,7 @@
 /*
 **************************
-CustomCalendar 2.0.4
-regDate 2023.10.19
+CustomCalendar 2.0.5
+regDate 2023.10.20
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -119,6 +119,9 @@ function CustomCalendar(el, option){
     this.pop.list.content;          //더보기 목록 컨텐츠 클래스 명
     this.pop.list.item;             //더보기 목록 클래스명
     this.pop.list.pin;              //더보기 핀 클래스명
+    this.pop.list.pinCon;           //더보기 핀 컨텐츠 클래스명
+    this.pop.list.pinMarker;        //더보기 핀 컨텐츠 마커 클래스명
+    this.pop.list.pinTitle;         //더보기 핀 컨텐츠 타이틀 클래스명
     this.pop.detail = {};           //---상세보기---
     this.pop.detail.content;        //상세 컨텐츠 클래스 명
     this.pop.detail.marker;         //상세 마커 카테고리 클래스 명
@@ -263,7 +266,10 @@ CustomCalendar.prototype.init = function(el, option){
         this.pop.typeMore = 'more';
         this.pop.list.content = 'cal-pop-list';
         this.pop.list.item = 'cal-pop-list-item';
-        this.pop.list.pin = 'cal-pop-list-pin';
+        this.pop.list.pin = 'cal-pop-pin';
+        this.pop.list.pinCon = 'cal-pop-pin-con';
+        this.pop.list.pinMarker = 'cal-pop-pin-marker';
+        this.pop.list.pinTitle = 'cal-pop-pin-tit';
         this.pop.detail.content = 'cal-pop-detail';
         this.pop.detail.marker = 'e-marker';
         this.pop.detail.list = 'detail-list';
@@ -411,7 +417,10 @@ CustomCalendar.prototype.init = function(el, option){
         option.pop.list = option.pop.list == undefined ? this.pop.list : option.pop.list;
         this.pop.list.content = option.pop.list.content == undefined ? 'cal-pop-list' : option.pop.list.content;
         this.pop.list.item = option.pop.list.item == undefined ? 'cal-pop-list-item' : option.pop.list.item;
-        this.pop.list.pin = option.pop.list.pin == undefined ? 'cal-pop-list-pin' : option.pop.list.pin;
+        this.pop.list.pin = option.pop.list.pin == undefined ? 'cal-pop-pin' : option.pop.list.pin;
+        this.pop.list.pinCon = option.pop.list.pinCon == undefined ? 'cal-pop-pin-con' : option.pop.list.pinCon;
+        this.pop.list.pinMarker = option.pop.list.pinMarker == undefined ? 'cal-pop-pin-marker' : option.pop.list.pinMarker;
+        this.pop.list.pinTitle = option.pop.list.pinTitle == undefined ? 'cal-pop-pin-tit' : option.pop.list.pinTitle;
         
         option.pop.detail = option.pop.detail == undefined ? this.pop.detail : option.pop.detail;
         this.pop.detail.content = option.pop.detail.content == undefined ? 'cal-pop-detail' : option.pop.detail.content;
@@ -662,7 +671,7 @@ CustomCalendar.prototype.initElements = function(){
     this.cal.$btnDay = this.cal.$table.find('.'+this.cal.btnDay);//캘린더 날짜 선택 버튼
     if(this.options.useDateEvent === true) {
         this.pin.$container = this.cal.$td.find('> .' + this.pin.container);
-        this.pin.maxSize = this.pin.size * 5;
+        this.pin.maxSize = this.pin.size * (this.pin.maxNum + 1);
         this.pin.$container.css('height', this.pin.maxSize + 'px');
     }
 }
@@ -926,7 +935,8 @@ CustomCalendar.prototype.removeEventData = function(el, id){
                     content : val.content,
                     startDate : val.startDate,
                     endDate : val.endDate,
-                    state : val.state
+                    state : val.state,
+                    id : val.id,
                 });
             }
         });
@@ -1113,10 +1123,11 @@ CustomCalendar.prototype.setPrompts = function(){
  */
 CustomCalendar.prototype.setMarkerCategory = function(){
     var ins = this;
+    var temp = false;
     this.event.items.forEach(function(v){
-        if (v.marker) {
+        if (v.marker && !temp) {
             ins.pin.markerCategory = v.key;
-            return false;
+            temp = true;
         }
     });
 }
@@ -1893,6 +1904,7 @@ CustomCalendar.prototype.setEventPop = function(){
         option.td = td;
         if (this.classList.contains(ins.pin.typeMore)) {
             //더보기 버튼
+            option.isPop = true;
             option.type = ins.pop.typeMore;
             option.data = [];
             var nowDate = td.getAttribute(ins.attr.cellDate);
@@ -1903,6 +1915,7 @@ CustomCalendar.prototype.setEventPop = function(){
             });
         } else {
             //일정 버튼
+            option.isPop = false;
             option.type = ins.pop.typeDetail;
             var eventId = this.getAttribute(ins.attr.event.id);
             ins.event.data.forEach(function(val, i){
@@ -1934,6 +1947,7 @@ CustomCalendar.prototype.setEventPop = function(){
         var option = {};
         option.td = td;
         option.type = ins.pop.typeDetail;
+        option.isPop = true;
         var eventId = this.getAttribute(ins.attr.event.id);
         ins.event.data.forEach(function(val, i){
             if (val.id == eventId) {
@@ -1960,7 +1974,7 @@ CustomCalendar.prototype.setEventPop = function(){
 }
 
 
-CustomCalendar.prototype.renderEventPop = function(event, option){
+CustomCalendar.prototype.renderEventPop = function(e, option){
     var ins = this;
     //이전 팝업 삭제
     var popup = this.cal.$calendar.find('.'+ins.pop.container);
@@ -1968,15 +1982,15 @@ CustomCalendar.prototype.renderEventPop = function(event, option){
     
     //target
     var targetTd;
-    if (event.type != 'keydown' && option.type != ins.pop.typeMore) {
+    if (e.type != 'keydown' && option.type != ins.pop.typeMore && !option.isPop) {
         var isFound = false;
-        var nowLocation = nowLocation = event.type == 'touchstart' ? event.touches[0] : event;
+        var nowLocation = nowLocation = e.type == 'touchstart' ? e.originalEvent.touches[0] : e;
         targetTd = document.elementsFromPoint(nowLocation.clientX, nowLocation.clientY);
         for (var i = 0; i < targetTd.length; i++) {
             if (targetTd[i].tagName === 'TD') {
                 targetTd = targetTd[i];
                 isFound = true;
-                break;
+                // break;
             }
         }
     } else {
@@ -1996,7 +2010,7 @@ CustomCalendar.prototype.renderEventPop = function(event, option){
         tdIndex = Math.abs(tdIndex - 6);
     }
     x += ((100 / 7) * tdIndex) + '%';
-    var y = 'top: '+ targetTd.offsetTop +'px;';
+    var y = 'top: '+ tg.offsetTop +'px;';
 
     //html 생성
     var date = targetTd.getAttribute(ins.attr.cellDate);
@@ -2045,7 +2059,7 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
             html += '<strong class="'+ ins.pop.detail.tit +'">'+ title +'</strong>';
             html += '<div class="'+ ins.pop.detail.itemCon +'">';
             html += '<div class="'+ ins.pop.detail.marker +'">';
-            html += '<span>'+ option.data.content.category +'</span>';
+            html += '<span>'+ option.data.content[val] +'</span>';
             html += '</div>';
             html += '</div>';
             html += '</li>';
@@ -2098,8 +2112,13 @@ CustomCalendar.prototype.setPopMoreHtml = function(option){
         html += '<button type="button" class="'+ ins.pop.list.pin +'" ';
         html += ins.attr.event.id + '="' + val.id + '"';
         html += ins.attr.event.startDate +'="'+ val.startDate +'" >';
+        html += '<div class="'+ ins.pop.list.pinCon +'">'
+        if (ins.pin.markerCategory) {
+            html += '<div class="'+ ins.pop.list.pinMarker +'">'+ val.content[ins.pin.markerCategory] +'</div>';
+        }
+        html += '<div class="'+ ins.pop.list.pinTitle +'">';
         html += val.content.title;
-        html += '</button>';
+        html += '</div></div></button>';
         html += '</li>';
     });
     html += '</ul>';
