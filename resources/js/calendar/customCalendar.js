@@ -640,7 +640,7 @@ CustomCalendar.prototype.renderLayout = function(){
     }
     layout += '</tbody>';
     layout += '</table>';
-    if (this.options.useDateEvent && this.event.items.length > 0) {
+    if (this.options.useDateEvent && this.options.useFilter && this.event.items.length > 0) {
         layout += this.renderFilter();
     }
     layout += '</div>';
