@@ -203,6 +203,10 @@
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con {display: block; line-height: 20px; word-break: break-all; flex-grow: 1;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-marker {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; flex-wrap: wrap;}
 .cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .e-marker > span {display: block; border-radius: 4px; padding: 0 5px; background-color: #0b75cc; line-height: 20px; color: #ffffff; word-break: break-all;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link {display: block; position: relative; padding-left: 1.3rem; color: #0d6efd; word-break: break-all;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link .i-link {display: block; position: absolute; top: 0.15rem; left: 0; width: 1rem; height: 1rem; margin-right: 5px;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link .i-link .p1 {fill: #0d6efd;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link > span {display: block; font-weight: 500; word-break: break-all;}
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; width: 100%; height: 25px; margin-top: 8px; background-color: #585858; border-radius: 5px; -webkit-box-pack: center; -moz-box-justify-content: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -moz-align-items: center; -ms-flex-align: center; align-items: center;}
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete .i-delete {display: block; width: auto; height: 20px;}
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete .i-delete .p1 {fill: #ffffff;}
@@ -222,6 +226,13 @@
 .cal-pop .cal-pop-body::-webkit-scrollbar {width: 8px; height: 5px; box-sizing: content-box;}
 .cal-pop .cal-pop-body::-webkit-scrollbar-thumb {height: 30%; border-radius: 4px; background: #828282;}
 .cal-pop .cal-pop-body::-webkit-scrollbar-track {padding: 0 5px; background: #e4e4e4;}
+
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link {transition: color 0.3s;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link:focus,
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link:hover {color: #56b1f9;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link .i-link .p1 {transition: fill 0.3s;}
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link:focus .i-link .p1,
+.cal-pop .cal-pop-body .cal-pop-detail .detail-list .detail-item .item-con .btn-cal-link:hover .i-link .p1 {fill: #56b1f9;}
 
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete {transition: background 0.3s;}
 .cal-pop .cal-pop-body .cal-pop-detail .btn-cal-delete:focus,
@@ -247,8 +258,19 @@
 	속성순서 : 레이아웃, 박스 모델, 배경, 폰트/정렬, 기타
 -------------------------------------------------------------------*/
 .cal-prompt {position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999; background-color: rgba(0,0,0,0.2);}
-.cal-prompt .prompt-box {display: block; position: absolute; top: 50px; left: 50%; max-width: 500px; width: 100%; padding: 25px; border-radius: 15px; background-color: #fff; transform: translateX(-50%);}
-.cal-prompt .prompt-box .tit {display: block; margin-bottom: 15px; font-weight: 600; font-size: 1rem; color: #000000;}
+.cal-prompt .prompt-box {display: block; position: absolute; top: 50px; left: 50%; max-width: 500px; width: 100%; padding: 25px 0; border-radius: 15px; background-color: #fff; transform: translateX(-50%);}
+.cal-prompt .prompt-box .tit {display: block; position: relative; margin-bottom: 15px; padding: 0 25px 0 35px; font-weight: 600; font-size: 1.125rem; color: #0d6efd;}
+.cal-prompt .prompt-box .tit::before {content:""; position: absolute; top: 15%; left: 25px; width: 4px; height: 70%; background-color: #0d6efd;}
+
+.cal-prompt .prompt-box .prompt-con {display: block; overflow-x: hidden; overflow-y: auto; max-height: 50vh; padding: 0 25px;}
+.cal-prompt .prompt-box .prompt-con::-webkit-scrollbar {width: 8px; height: 5px; box-sizing: content-box;}
+.cal-prompt .prompt-box .prompt-con::-webkit-scrollbar-thumb {height: 30%; border-radius: 4px; background: #828282;}
+.cal-prompt .prompt-box .prompt-con::-webkit-scrollbar-track {padding: 0 5px; background: #e4e4e4;}
+.cal-prompt .prompt-box .prompt-con .prompt-list {display: block;}
+.cal-prompt .prompt-box .prompt-con .prompt-list > li {display: block; margin-bottom: 10px;}
+.cal-prompt .prompt-box .prompt-con .prompt-list > li:last-child {margin-bottom: 0;}
+.cal-prompt .prompt-box .prompt-con .prompt-list > li .lt {display: block; margin-bottom: 5px; font-weight: 600; font-size: 1rem; color: #000000;}
+.cal-prompt .prompt-box .prompt-con .prompt-list > li .lc {display: block;}
 
 .cal-prompt .prompt-box .cnf-intxt {display: block; width: 100%; height: 40px; padding: 2px 15px; border: 1px solid #dfdfdf; line-height: 34px; font-weight: 400; font-size: 1rem; color: #000000;}
 .cal-prompt .prompt-box .cnf-intxt::placeholder {color: #777777;}
@@ -318,6 +340,9 @@
 .cal-prompt .prompt-box .cnf-check-list > li .cnf-check > input[type="checkbox"]:checked + span::before,
 .cal-prompt .prompt-box .cnf-check-list > li .cnf-check > input[type="checkbox"]:checked:not(:focus-visible) + span::before {border-color: #0d6efd; background-color: #fff;}
 .cal-prompt .prompt-box .cnf-check-list > li .cnf-check > input[type="checkbox"]:checked + span::after {opacity: 1;}
+
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio > input[type="radio"]:disabled + span {color: #dfdfdf;}
+.cal-prompt .prompt-box .cnf-radio-list > li .cnf-check > input[type="checkbox"]:disabled + span {color: #dfdfdf;}
 
 @keyframes prompt {
 	0% {opacity: 0;}
