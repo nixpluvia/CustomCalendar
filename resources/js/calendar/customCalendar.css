@@ -284,6 +284,11 @@
 .cal-prompt .prompt-box .cnf-sel > select > option {font-weight: inherit; font-size: inherit; color: inherit;}
 .cal-prompt .prompt-box .cnf-sel > select > option:disabled {background-color: #dfdfdf;}
 
+.cal-prompt .prompt-box .cnf-time {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex;}
+.cal-prompt .prompt-box .cnf-time .cnf-sel {flex-grow: 1; margin-right: 5px;}
+.cal-prompt .prompt-box .cnf-time .cnf-sel:last-child {margin-left: 5px; margin-right: 0;}
+.cal-prompt .prompt-box .cnf-time .cnf-sel:first-child {margin-left: 0;}
+
 .cal-prompt .prompt-box .cnf-radio-list {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: flex; margin: 0 -5px; flex-wrap: wrap;}
 .cal-prompt .prompt-box .cnf-radio-list > li {display: block; padding: 0 5px 5px;}
 .cal-prompt .prompt-box .cnf-radio-list > li .cnf-radio {display: block; position: relative; min-height: 20px; padding-left: 25px; line-height: 1; white-space: normal; cursor: pointer;}

@@ -1,7 +1,7 @@
 /*
 **************************
 CustomCalendar 2.0.6
-regDate 2023.11.14
+regDate 2023.11.15
 Copyright (c) 2022 nixpluvia
 
 Contact whbear12@gmail.com
@@ -131,7 +131,9 @@ function CustomCalendar(el, option){
     this.pop.detail.tit;            //상세 항목 아이템 제목 클래스 명
     this.pop.detail.itemCon;        //상세 항목 아이템 컨텐츠 클래스 명
     this.pop.detail.btnLink;        //상세 항목 링크 버튼
+    this.pop.detail.btnWrap;        //상세 항목 버튼 박스
     this.pop.detail.btnDelete;      //상세 항목 삭제 버튼
+    this.pop.detail.btnEdit;      //상세 항목 삭제 버튼
 
     this.prompt = {};               //===입력창===
     this.prompt.container;          //입력창 클래스 명
@@ -139,6 +141,7 @@ function CustomCalendar(el, option){
     this.prompt.title;              //입력창 제목 클래스 명
     this.prompt.content;            //입력창 컨텐츠 클래스 명
     this.prompt.input;              //입력창 컨텐츠 input box 클래스 명
+    this.prompt.time;               //입력창 컨텐츠 time bos 클래스 명
     this.prompt.select;             //입력창 컨텐츠 select box 클래스 명
     this.prompt.radioList;          //입력창 컨텐츠 radio list 클래스 명
     this.prompt.radio;              //입력창 컨텐츠 radio box 클래스 명
@@ -210,11 +213,14 @@ function CustomCalendar(el, option){
     this.options.useCustomRender;   //이벤트 수동렌더링 사용 여부
     this.options.eventAuth;         //이벤트 사용 권한
     this.options.useDelete;         //이벤트 삭제 사용 여부
-    this.options.promptType;        //prompt 형식 `default`, `list`
+    this.options.useEdit;         //이벤트 삭제 사용 여부
+    this.options.promptType;        //클릭 사용 여부
 
     this.icon = {};                 //===아이콘===
     this.icon.filter;               //필터 아이콘
+    this.icon.edit;                 //수정 아이콘
     this.icon.delete;               //삭제 아이콘
+    this.icon.link;                 //링크 아이콘
 
     this.init(el, option);//초기화 실행
     // this.info();
@@ -286,12 +292,15 @@ CustomCalendar.prototype.init = function(el, option){
         this.pop.detail.itemCon = 'item-con';
         this.pop.detail.btnLink = 'btn-cal-link';
         this.pop.detail.btnDelete = 'btn-cal-delete';
+        this.pop.detail.btnEdit = 'btn-cal-edit';
+        this.pop.detail.btnWrap = 'detail-btn-wrap';
 
         this.prompt.container = 'cal-prompt';
         this.prompt.boxWrap = 'prompt-box';
         this.prompt.title = 'tit';
         this.prompt.content = 'prompt-con';
         this.prompt.input = 'cnf-intxt';
+        this.prompt.time = 'cnf-time';
         this.prompt.select = 'cnf-sel';
         this.prompt.radioList = 'cnf-radio-list';
         this.prompt.radio = 'cnf-radio';
@@ -363,9 +372,11 @@ CustomCalendar.prototype.init = function(el, option){
         this.options.useCustomRender = false;
         this.options.eventAuth = true;
         this.options.useDelete = false;
+        this.options.useEdit = false;
         this.options.promptType = 'default';
 
         this.icon.filter = '<i-filter class="i i-filter"></i-filter>';
+        this.icon.edit = '<i-edit class="i i-edit"></i-edit>';
         this.icon.delete = '<i-delete class="i i-delete"></i-delete>';
         this.icon.link = '<i-link class="i i-delete"></i-link>';
     } else {
@@ -447,6 +458,8 @@ CustomCalendar.prototype.init = function(el, option){
         this.pop.detail.itemCon = option.pop.detail.itemCon == undefined ? 'item-con' : option.pop.detail.itemCon;
         this.pop.detail.btnLink = option.pop.detail.btnLink == undefined ? 'btn-cal-link' : option.pop.detail.btnLink;
         this.pop.detail.btnDelete = option.pop.detail.btnDelete == undefined ? 'btn-cal-delete' : option.pop.detail.btnDelete;
+        this.pop.detail.btnEdit = option.pop.detail.btnEdit == undefined ? 'btn-cal-edit' : option.pop.detail.btnEdit;
+        this.pop.detail.btnWrap = option.pop.detail.btnWrap == undefined ? 'detail-btn-wrap' : option.pop.detail.btnWrap;
 
 
         option.prompt = option.prompt == undefined ? this.prompt : option.prompt;
@@ -455,6 +468,7 @@ CustomCalendar.prototype.init = function(el, option){
         this.prompt.title = option.prompt.title == undefined ? 'tit' : option.prompt.title;
         this.prompt.content = option.prompt.content == undefined ? 'prompt-con' : option.prompt.content;
         this.prompt.input = option.prompt.input == undefined ? 'cnf-intxt' : option.prompt.input;
+        this.prompt.time = option.prompt.time == undefined ? 'cnf-time' : option.prompt.time;
         this.prompt.select = option.prompt.select == undefined ? 'cnf-sel' : option.prompt.select;
         this.prompt.radioList = option.prompt.radioList == undefined ? 'cnf-radio-list' : option.prompt.radioList;
         this.prompt.radio = option.prompt.radio == undefined ? 'cnf-radio' : option.prompt.radio;
@@ -531,10 +545,12 @@ CustomCalendar.prototype.init = function(el, option){
         this.options.useCustomRender = option.options.useCustomRender == undefined ? false : option.options.useCustomRender;
         this.options.eventAuth = option.options.eventAuth == undefined ? true : option.options.eventAuth;
         this.options.useDelete = option.options.useDelete == undefined ? false : option.options.useDelete;
+        this.options.useEdit = option.options.useEdit == undefined ? false : option.options.useEdit;
         this.options.promptType = option.options.promptType == undefined ? 'default' : option.options.promptType;
 
         option.icon = option.icon == undefined ? this.icon : option.icon;
         this.icon.filter = option.icon.filter == undefined ? '<i-filter class="i i-filter"></i-filter>' : option.icon.filter;
+        this.icon.edit = option.icon.edit == undefined ? '<i-edit class="i i-edit"></i-edit>' : option.icon.edit;
         this.icon.delete = option.icon.delete == undefined ? '<i-delete class="i i-delete"></i-delete>' : option.icon.delete;
         this.icon.link = option.icon.link == undefined ? '<i-link class="i i-link"></i-link>' : option.icon.link;
     }
@@ -940,6 +956,138 @@ CustomCalendar.prototype.resetDateEvent = function(isInit){
         }
     });
 }
+
+
+CustomCalendar.prototype.editEventData = function(el, id){
+    var ins = this;
+    //hidden type 제거
+    var items = JSON.parse(JSON.stringify(ins.event.items));
+    for (var i = items.length - 1; i >= 0; i--) {
+        if (items[i].hidden == true) items.splice(i, 1);
+    }
+    var eventContent;
+    var target = null;
+    for (idx in this.event.data) {
+        var val = this.event.data[idx];
+        if (val.id === id) {
+            target = val;
+            break;
+        }
+    };
+    
+    if (ins.options.promptType == 'default') {
+        eventContent = {};
+        //promise chaining
+        const promises = items.map(val=>{
+            return () => {
+                return ins.popPrompt(val, target.content).then(result => {
+                    eventContent[result.key] = result.value;
+                })
+            }
+        });
+    
+        //초기값 reduce의 promise.resolve를 실행
+        promises.reduce((promiseChain, nowPromise) => {
+            return promiseChain.then(() => {
+                return nowPromise();
+            });
+        }, Promise.resolve()).then((result) =>{
+            if (ins.options.useCustomRender && typeof ins.onEditCallback == 'function') { //커스텀 렌더링
+                new Promise((resolve, reject)=>{
+                    eventContent.id = target.id;
+                    eventContent.startDate = target.startDate;
+                    eventContent.endDate = target.endDate;
+
+                    //커스텀 콜백함수
+                    ins.onEditCallback.call(ins, eventContent, resolve, reject)
+                }).then(result => {
+                    for (idx in this.event.data) {
+                        var val = this.event.data[idx];
+                        if (val.id === id) {
+                            Object.keys(val.content).forEach(function(key){
+                                val.content[key] = String(result[key]);
+                            });
+                            break;
+                        }
+                    };
+
+                    this.renderEventData(this.event.data);
+                    //popup 닫기
+                    el.closest('.'+ins.pop.container).remove();
+                }).catch(result => {
+                    alert(result ? result : '등록 취소 되었습니다.');
+                });
+            } else { //기본
+                for (idx in this.event.data) {
+                    var val = this.event.data[idx];
+                    if (val.id === id) {
+                        Object.keys(val.content).forEach(function(key){
+                            val.content[key] = String(eventContent);
+                        });
+                        break;
+                    }
+                };
+                
+                this.renderEventData(this.event.data);
+                //popup 닫기
+                el.closest('.'+ins.pop.container).remove();
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    } else if (ins.options.promptType == 'list'){
+        if (ins.options.useCustomRender && typeof ins.onEditCallback == 'function') { //커스텀 렌더링
+            ins.popPrompt(items, target.content).then(result => {
+                eventContent = result;
+                eventContent.id = target.id;
+                eventContent.startDate = target.startDate;
+                eventContent.endDate = target.endDate;
+                
+                //커스텀 콜백함수
+                return new Promise((resolve, reject)=>{
+                    ins.onEditCallback.call(ins, eventContent, resolve, reject)
+                });
+            }).then(result => {
+                for (idx in this.event.data) {
+                    var val = this.event.data[idx];
+                    if (val.id === id) {
+                        Object.keys(val.content).forEach(function(key){
+                            val.content[key] = String(result[key]);
+                        });
+                        break;
+                    }
+                };
+
+                this.renderEventData(this.event.data);
+                //popup 닫기
+                el.closest('.'+ins.pop.container).remove();
+            }).catch(result => {
+                console.log(result ? result : '수정 취소 되었습니다.');
+            });
+        } else {//기본
+            ins.popPrompt(items, target.content).then(result => {
+                for (idx in this.event.data) {
+                    var val = this.event.data[idx];
+                    if (val.id === id) {
+                        Object.keys(val.content).forEach(function(key){
+                            val.content[key] = String(result[key]);
+                        });
+                        break;
+                    }
+                };
+
+                this.renderEventData(this.event.data);
+                //popup 닫기
+                el.closest('.'+ins.pop.container).remove();
+            }).catch(result => {
+                console.log(result ? result : '수정 취소 되었습니다.');
+            });
+        }
+    }
+}
+// 수정 callback
+CustomCalendar.prototype.onEditCallback;
+
 
 /**
  * Data 삭제
@@ -1700,10 +1848,10 @@ CustomCalendar.prototype.onMouseEventEnd = function(){
     //hidden type 제거
     var items = JSON.parse(JSON.stringify(ins.event.items));
     for (var i = items.length - 1; i >= 0; i--) {
-        if (items[i].type == 'hidden' || items[i].type == 'hiddenLink') items.splice(i, 1);
+        if (items[i].hidden == true) items.splice(i, 1);
     }
+
     var eventContent;
-    
     if (ins.options.promptType == 'default') {
         eventContent = {};
         //promise chaining
@@ -1721,13 +1869,13 @@ CustomCalendar.prototype.onMouseEventEnd = function(){
                 return nowPromise();
             });
         }, Promise.resolve()).then((result) =>{
-            if (ins.options.useCustomRender && typeof ins.onItemAddCallback == 'function') { //커스텀 렌더링
+            if (ins.options.useCustomRender && typeof ins.onAddCallback == 'function') { //커스텀 렌더링
                 new Promise((resolve, reject)=>{
                     eventContent.startDate = ins.msevn.startDate;
                     eventContent.endDate = ins.msevn.endDate;
 
                     //커스텀 콜백함수
-                    ins.onItemAddCallback.call(ins, eventContent, resolve, reject)
+                    ins.onAddCallback.call(ins, eventContent, resolve, reject)
                 }).then(result => {
                     ins.setDateEventData(result);
                     ins.setDateEventSort();
@@ -1744,7 +1892,7 @@ CustomCalendar.prototype.onMouseEventEnd = function(){
             console.log(err);
         });
     } else if (ins.options.promptType == 'list'){
-        if (ins.options.useCustomRender && typeof ins.onItemAddCallback == 'function') { //커스텀 렌더링
+        if (ins.options.useCustomRender && typeof ins.onAddCallback == 'function') { //커스텀 렌더링
             ins.popPrompt(items).then(result => {
                 eventContent = result;
                 eventContent.startDate = ins.msevn.startDate;
@@ -1752,7 +1900,7 @@ CustomCalendar.prototype.onMouseEventEnd = function(){
                 
                 //커스텀 콜백함수
                 return new Promise((resolve, reject)=>{
-                    ins.onItemAddCallback.call(ins, eventContent, resolve, reject)
+                    ins.onAddCallback.call(ins, eventContent, resolve, reject)
                 });
             }).then(result => {
                 ins.setDateEventData(result);
@@ -1777,7 +1925,7 @@ CustomCalendar.prototype.onMouseEventEnd = function(){
 }
 
 //드래그 이벤트 등록 후 커스텀
-CustomCalendar.prototype.onItemAddCallback;
+CustomCalendar.prototype.onAddCallback;
 
 
 /**
@@ -1869,15 +2017,19 @@ CustomCalendar.prototype.setDateEventData = function(eventValue){
  * @param {Array} options (select형식 사용일 경우 options 배열값)
  * @return ;
  */
-CustomCalendar.prototype.popPrompt = function(item){
+CustomCalendar.prototype.popPrompt = function(item, target){
     var ins = this;
     if (item == undefined) return false;
-    var types = ['default', 'select', 'radio', 'checkbox', 'link'];
+    var types = ['default', 'select', 'radio', 'checkbox', 'link', 'time'];
     if (ins.options.promptType == 'default') { //기본형태
         item.type = item.type == undefined ? 'default' : item.type;
-        if (types.indexOf(item.type) == -1 || (item.type != 'default' && item.options == undefined)) return false;
+        if (types.indexOf(item.type) == -1 || (item.type != 'default' && item.type != 'link' && item.options == undefined)) return false;
         //렌더링
-        this.renderDefaultPrompt(item);
+        if (target != undefined) {//수정
+            this.renderDefaultPrompt(item, target);
+        } else {//등록
+            this.renderDefaultPrompt(item);
+        }
 
         var $container = $('.'+ins.prompt.container);
         var $boxWrap = $('.'+ins.prompt.boxWrap);
@@ -2012,7 +2164,11 @@ CustomCalendar.prototype.popPrompt = function(item){
             });
         });
     } else if (ins.options.promptType == 'list') { //리스트 형태
-        this.renderListPrompt(item);
+        if (target != undefined) {//수정
+            this.renderListPrompt(item, target);
+        } else {
+            this.renderListPrompt(item);
+        }
 
         var $container = $('.'+ins.prompt.container);
         var $boxWrap = $('.'+ins.prompt.boxWrap);
@@ -2033,7 +2189,7 @@ CustomCalendar.prototype.popPrompt = function(item){
                         var $form;
                         if (v.type == 'radio') { //라디오박스
                             $form = $('.'+ins.prompt.value+'[name="'+ v.key +'"]:checked');
-                            if (v.require != false && $form.length < 1) {
+                            if (v.require != false && $form.length < 1) { //중단
                                 validation = false;
                                 error = v.prompt;
                                 break;
@@ -2042,7 +2198,7 @@ CustomCalendar.prototype.popPrompt = function(item){
                             data[v.key] = $form.val();
                         } else if (v.type == 'checkbox') { //체크박스
                             $form = $('.'+ins.prompt.value+'[name="'+ v.key +'"]:checked');
-                            if (v.require != false && $form.length < 1) {
+                            if (v.require != false && $form.length < 1) { //중단
                                 validation = false;
                                 error = v.prompt;
                                 break;
@@ -2052,9 +2208,27 @@ CustomCalendar.prototype.popPrompt = function(item){
                             $form.each(function(i, el){
                                 data.value.push(el.value);
                             });
+                        } else if (v.type == 'time') { //시간박스
+                            var timeUnit = ['hour', 'min'];
+                            var time = '';
+                            timeUnit.forEach(function(unit, idx){
+                                $form = $('.'+ins.prompt.value+'[name="'+ v.key +'_'+ unit +'"]');
+                                if (validation && v.require != false && $form.val() == '') {
+                                    validation = false;
+                                    error = v.prompt;
+                                } else {
+                                    var sep = timeUnit.length - 1 != idx ? ':' : '';
+                                    time += $form.val() + sep;
+                                }
+                            });
+                            if (!validation) { //중단
+                                break;
+                            }
+
+                            data[v.key] = time;
                         } else { //input박스, select 박스
                             $form = $('.'+ins.prompt.value+'[name="'+ v.key +'"]');
-                            if (v.require != false && $form.val() == '') {
+                            if (v.require != false && $form.val() == '') { //중단
                                 validation = false;
                                 error = v.prompt;
                                 break;
@@ -2067,8 +2241,6 @@ CustomCalendar.prototype.popPrompt = function(item){
                     if (validation) {
                         resolve(data);
                         $btn.off('click');
-                        $val.off('keydown');
-                        $container.off('click');
                         $container.remove();
                     } else {
                         alert(error);
@@ -2076,8 +2248,6 @@ CustomCalendar.prototype.popPrompt = function(item){
                 } else {
                     reject('취소');
                     $btn.off('click');
-                    $val.off('keydown');
-                    $container.off('click');
                     $container.remove();
                 }
             });
@@ -2086,40 +2256,84 @@ CustomCalendar.prototype.popPrompt = function(item){
     }
 }
 
-CustomCalendar.prototype.renderDefaultPrompt = function(item){
+CustomCalendar.prototype.renderDefaultPrompt = function(item, target){
     var ins = this;
     var html = '';
     html += '<div class="'+ this.prompt.container +'">';
     html += '    <div class="'+ this.prompt.boxWrap +'">';
     html += '        <strong class="'+ this.prompt.title +'">'+ item.prompt +'</strong>';
     html += '        <div class="'+ this.prompt.content +'">';
-    if (item.type == 'default') {//input text
-        html += '<input type="text" class="'+ this.prompt.input + ' ' + this.prompt.value +'">';
-    } else if (item.type == 'radio'){//input radio
+    if (item.type == 'radio'){//input radio
         html += '<ul class="'+ this.prompt.radioList +'">';
         item.options.forEach(function(val, i){
-            var ck = i == 0 ? 'checked' : '';
+            var ck;//기존 값
+            if (target != undefined) {
+                ck = val == target[item.key] ? 'checked' : '';
+            } else {
+                ck = i == 0 ? 'checked' : '';
+            }
             html += '<li><label class="'+ ins.prompt.radio +'">';
             html += '<input type="radio" class="'+ ins.prompt.value +'" name="'+ item.key +'" value="'+ val +'" '+ ck +'><span>'+ val +'</span>';
             html += '</label></li>';
         });
         html += '</ul>'
-    } else if (item.type == 'checkbox') {
+    } else if (item.type == 'checkbox') {//input checkbox
         html += '<ul class="'+ this.prompt.checkList +'">';
         item.options.forEach(function(val, i){
-            var ck = i == 0 ? 'checked' : '';
+            var ck;//기존값
+            if (target != undefined) {
+                ck = val == target[item.key] ? 'checked' : '';
+            } else {
+                ck = i == 0 ? 'checked' : '';
+            }
             html += '<li><label class="'+ ins.prompt.check +'">';
             html += '<input type="checkbox" class="'+ ins.prompt.value +'" name="'+ item.key +'" value="'+ val +'" '+ ck +'><span>'+ val +'</span>';
             html += '</label></li>';
         });
         html += '</ul>'
-    } else {//select box
+    } else if (item.type == 'time') {//time
+        html += '<div class="'+ this.prompt.time +'">';
+        if (target != undefined) {
+            var time = target[item.key].split(':');
+        }
+        html += '<div class="'+ this.prompt.select +'">';
+        html += '   <select class="'+ this.prompt.value +'" name="'+ item.key +'">';
+        item.options.hour.forEach(function(val, i){
+            var ck;//기존값
+            if (target != undefined) {
+                ck = val == time[0] ? 'selected' : '';
+            } else {
+                ck = i == 0 ? 'selected' : '';
+            }
+            html += '<option value="'+ val +'" '+ ck +'>'+ val +'</option>';
+        });
+        item.options.min.forEach(function(val, i){
+            var ck;//기존값
+            if (target != undefined) {
+                ck = val == time[1] ? 'selected' : '';
+            } else {
+                ck = i == 0 ? 'selected' : '';
+            }
+            html += '<option value="'+ val +'" '+ ck +'>'+ val +'</option>';
+        });
+        html += '</select></div>'
+        html += '</div>'
+    } else if (item.type == 'select'){//select box
         html += '<div class="'+ this.prompt.select +'">';
         html += '   <select class="'+ this.prompt.value +'" name="'+ item.key +'">';
         item.options.forEach(function(val, i){
-            html += '<option value="'+ val +'">'+ val +'</option>';
+            var ck;//기존값
+            if (target != undefined) {
+                ck = val == target[item.key] ? 'selected' : '';
+            } else {
+                ck = i == 0 ? 'selected' : '';
+            }
+            html += '<option value="'+ val +'" '+ ck +'>'+ val +'</option>';
         });
         html += '</select></div>'
+    } else {//input text
+        var init = target != undefined ? target[item.key] : '';//기존 값
+        html += '<input type="text" class="'+ this.prompt.input + ' ' + this.prompt.value +'" value="'+ init +'">';
     }
     html += '        </div>';
     html += '        <div class="'+ this.prompt.btnWrap +'">';
@@ -2131,7 +2345,7 @@ CustomCalendar.prototype.renderDefaultPrompt = function(item){
     this.cal.$calendar.append(html);
 }
 
-CustomCalendar.prototype.renderListPrompt = function(items){
+CustomCalendar.prototype.renderListPrompt = function(items, target){
     var ins = this;
     var html = '';
     html += '<div class="'+ this.prompt.container +'">';
@@ -2143,33 +2357,72 @@ CustomCalendar.prototype.renderListPrompt = function(items){
         html += '    <li>';
         html += '        <strong class="'+ ins.prompt.listTitle +'">'+ v.title +'</strong>';
         html += '        <div class="'+ ins.prompt.listContent +'">';
-        if (v.type == undefined || v.type == 'default' || v.type == 'link') {//input text
-            html += '<input type="text" class="'+ ins.prompt.input + ' ' + ins.prompt.value +'" name="'+ v.key +'">';
-        } else if (v.type == 'radio'){//input radio
+        if (v.type == 'radio'){//input radio
             html += '<ul class="'+ ins.prompt.radioList +'">';
             v.options.forEach(function(val, i){
-                var ck = i == 0 ? 'checked' : '';
+                var ck;//기존 값
+                if (target != undefined) {
+                    ck = val == target[v.key] ? 'checked' : '';
+                } else {
+                    ck = i == 0 ? 'checked' : '';
+                }
                 html += '<li><label class="'+ ins.prompt.radio +'">';
                 html += '<input type="radio" class="'+ ins.prompt.value +'" name="'+ v.key +'" value="'+ val +'" '+ ck +'><span>'+ val +'</span>';
                 html += '</label></li>';
             });
             html += '</ul>'
-        } else if (v.type == 'checkbox') {
+        } else if (v.type == 'checkbox') {//input checkbox
             html += '<ul class="'+ ins.prompt.checkList +'">';
             v.options.forEach(function(val, i){
-                var ck = i == 0 ? 'checked' : '';
+                var ck;//기존 값
+                if (target != undefined) {
+                    ck = val == target[v.key] ? 'checked' : '';
+                } else {
+                    ck = i == 0 ? 'checked' : '';
+                }
                 html += '<li><label class="'+ ins.prompt.check +'">';
                 html += '<input type="checkbox" class="'+ ins.prompt.value +'" name="'+ v.key +'" value="'+ val +'" '+ ck +'><span>'+ val +'</span>';
                 html += '</label></li>';
             });
             html += '</ul>'
+        } else if (v.type == 'time') {//time
+            var timeUnit = ['hour', 'min'];
+            if (target != undefined) var time = target[v.key].split(':');
+
+            html += '<div class="'+ ins.prompt.time +'">';
+            timeUnit.forEach(function(unit, idx){
+                if (v.options[unit] != undefined) {
+                    html += '<div class="'+ ins.prompt.select +'">';
+                    html += '   <select class="'+ ins.prompt.value +'" name="'+ v.key +'_'+ unit +'">';
+                    v.options[unit].forEach(function(val, i){
+                        var ck;//기존값
+                        if (target != undefined) {
+                            ck = val == time[idx] ? 'selected' : '';
+                        } else {
+                            ck = i == 0 ? 'selected' : '';
+                        }
+                        html += '<option value="'+ val +'" '+ ck +'>'+ val +'</option>';
+                    });
+                    html += '</select></div>'
+                }
+            });
+            html += '</div>'
         } else if (v.type == 'select') {//select box
             html += '<div class="'+ ins.prompt.select +'">';
             html += '   <select class="'+ ins.prompt.value +'" name="'+ v.key +'">';
             v.options.forEach(function(val, i){
-                html += '<option value="'+ val +'">'+ val +'</option>';
+                var ck;//기존값
+                if (target != undefined) {
+                    ck = val == target[v.key] ? 'selected' : '';
+                } else {
+                    ck = i == 0 ? 'selected' : '';
+                }
+                html += '<option value="'+ val +'" '+ ck +'>'+ val +'</option>';
             });
             html += '</select></div>'
+        } else {//input text
+            var init = target != undefined ? target[v.key] : '';//기존 값
+            html += '<input type="text" class="'+ ins.prompt.input + ' ' + ins.prompt.value +'" name="'+ v.key +'" value="'+ init +'">';
         }
     });
     html += '        </div></li>';
@@ -2263,6 +2516,18 @@ CustomCalendar.prototype.setEventPop = function(){
     });
 
 
+    //수정버튼 사용 여부
+    if (this.options.useEdit) {
+        this.cal.$body.on('mousedown touchstart keydown', '.'+ins.pop.detail.btnEdit, function(e){
+            if (e.type == 'keydown') {
+                var key = false;
+                key = e.key === 'Enter' || e.keyCode === 13 ? true : key;
+                if (!key) return;
+            }
+            var id = this.getAttribute(ins.attr.event.id);
+            ins.editEventData(this, id);
+        });
+    }
     //삭제버튼 사용 여부
     if (this.options.useDelete) {
         this.cal.$body.on('mousedown touchstart keydown', '.'+ins.pop.detail.btnDelete, function(e){
@@ -2383,18 +2648,8 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
                     if (val.indexOf('http://') < 0 && val.indexOf('https://') < 0) {
                         val = 'https://' + val;
                     }
-                    html += '<a href="'+ val +'" class="'+ ins.pop.detail.btnLink +'" target="_blank">'+ ins.icon.link + '<span>' + val +'</span></a>';
-                }
-                html += '</div></li>';
-            } else if (type == 'hiddenLink'){
-                html += '<li class="'+ ins.pop.detail.item +'">';
-                html += '<strong class="'+ ins.pop.detail.tit +'">'+ title +'</strong>';
-                html += '<div class="'+ ins.pop.detail.itemCon +'">';
-                if (val != undefined && val != null) {
-                    if (val.indexOf('http://') < 0 && val.indexOf('https://') < 0) {
-                        val = 'https://' + val;
-                    }
-                    html += '<a href="'+ val +'" class="'+ ins.pop.detail.btnLink +'" target="_blank">'+ ins.icon.link + '<span>'+ val +'</span></a>';
+                    var tg = val.indexOf('kns') >= 0 ? '_self' : '_blank'; // KNS 한정 추가 내용
+                    html += '<a href="'+ val +'" class="'+ ins.pop.detail.btnLink +'" target="'+ tg +'">'+ ins.icon.link + '<span>' + val +'</span></a>';
                 }
                 html += '</div></li>';
             } else {
@@ -2419,8 +2674,15 @@ CustomCalendar.prototype.setPopDetailHtml = function(option){
     };
 
     html += '</ul>';
-    if (ins.options.useDelete) {
-        html += '<button type="button" class="'+ ins.pop.detail.btnDelete +'" '+ ins.attr.event.id +'="'+ option.data.id +'" >'+ ins.icon.delete +'<span>삭제</span></button>';
+    if (ins.options.useDelete || ins.options.useEdit) {
+        html += '<div class="'+ ins.pop.detail.btnWrap +'">'
+        if (ins.options.useEdit) {
+            html += '<button type="button" class="'+ ins.pop.detail.btnEdit +'" '+ ins.attr.event.id +'="'+ option.data.id +'" >'+ ins.icon.edit +'<span>수정</span></button>';
+        }
+        if (ins.options.useDelete) {
+            html += '<button type="button" class="'+ ins.pop.detail.btnDelete +'" '+ ins.attr.event.id +'="'+ option.data.id +'" >'+ ins.icon.delete +'<span>삭제</span></button>';
+        }
+        html += '</div>';
     }
     html += '</div>';
     return html;
@@ -2458,19 +2720,6 @@ CustomCalendar.prototype.setPopMoreHtml = function(option){
     return html;
 }
 
-
-/**
- * 이벤트 삭제 버튼 이벤트 등록
- *
- * @param {Object} option 이벤트 옵션
- * @return {void} html 구조 텍스트 반환
- */
-CustomCalendar.prototype.onDeleteItem = function(){
-    var ins = this;
-    this.cal.$btnMonthPrev.on('click', function(){
-        customEvent(ins, this);
-    });
-}
 
 /*============================================================================================
     @filter
@@ -2616,6 +2865,21 @@ class deleteIcon extends HTMLElement {
         + '</svg>';
     }
 }
+class editIcon extends HTMLElement {
+    connectedCallback() {
+        let newIcon = document.createElement('svg');
+        this.appendChild(newIcon);
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 30 30">'
+        +'<path class="p1" d="M23.6,12.5v10.6c0,0.3-0.2,0.5-0.5,0.5H6.9c-0.3,0-0.5-0.2-0.5-0.5V6.9c0-0.3,0.2-0.5,0.5-0.5h10.6c0.3,0,0.5-0.2,0.5-0.5'
+        +'V4.5C18,4.2,17.8,4,17.5,4H6.4H5.5C4.7,4,4,4.7,4,5.5v0.9v17.2v0.9C4,25.3,4.7,26,5.5,26h0.9h17.2h0.9c0.8,0,1.5-0.7,1.5-1.5v-0.9'
+        +'V12.5c0-0.3-0.2-0.5-0.5-0.5h-1.4C23.8,12,23.6,12.2,23.6,12.5z"/>'
+        +'<path class="p1" d="M26.6,6.2l1-1c0.2-0.2,0.2-0.5,0-0.7l-1.1-1.1l-1.1-1.1c-0.2-0.2-0.5-0.2-0.7,0l-1,1c-0.2,0.2-0.2,0.5,0,0.7l2.1,2.1'
+        +'C26.1,6.4,26.4,6.4,26.6,6.2z"/>'
+        +'<path class="p1" d="M21.4,5.8l-7.9,7.9l-1.2,3.5c-0.1,0.3,0.2,0.6,0.5,0.5l3.5-1.2l7.9-7.9c0.2-0.2,0.2-0.5,0-0.7l-2.1-2.1'
+        +'C21.9,5.6,21.6,5.6,21.4,5.8z"/>'
+        + '</svg>';
+    }
+}
 class linkIcon extends HTMLElement {
     connectedCallback() {
         let newIcon = document.createElement('svg');
@@ -2636,4 +2900,5 @@ class linkIcon extends HTMLElement {
 }
 customElements.define('i-filter', filterIcon);
 customElements.define('i-delete', deleteIcon);
+customElements.define('i-edit', editIcon);
 customElements.define('i-link', linkIcon);
